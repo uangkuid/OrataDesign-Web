@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -14,11 +14,6 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-    }
-    
-    js {
-        browser()
-        binaries.executable()
     }
     
     @OptIn(ExperimentalWasmDsl::class)
@@ -35,12 +30,22 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material3)
+            implementation(libs.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.composeIcons.feather)
+            implementation(libs.material.adaptive)
+            implementation(libs.material.navigation.suite)
+            implementation(libs.material.layout)
+            implementation(libs.material.navigation)
+            implementation(libs.ui.backhandler)
+            implementation(libs.constraintlayout.compose.multiplatform)
+            implementation(libs.designsystem)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
