@@ -10,6 +10,7 @@ androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.6"
 androidx-testExt = "1.3.0"
 composeMultiplatform = "1.10.0-rc01"
+composeHotReload = "1.1.0-alpha01"
 constraintlayoutComposeMultiplatform = "0.6.1"
 design = "0.0.1-Alpha"
 junit = "4.13.2"
@@ -60,3 +61,4 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "plugin-serialization" }
+composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }

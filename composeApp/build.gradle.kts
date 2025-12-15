@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -15,6 +17,8 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+
+    jvm()
     
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
@@ -46,9 +50,14 @@ kotlin {
             implementation(libs.ui.backhandler)
             implementation(libs.constraintlayout.compose.multiplatform)
             implementation(libs.designsystem)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
         }
     }
 }
@@ -77,6 +86,18 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.oratakashi.design.docs.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.oratakashi.design.docs"
+            packageVersion = "1.0.0"
+        }
     }
 }
 
