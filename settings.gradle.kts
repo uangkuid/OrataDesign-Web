@@ -1,4 +1,4 @@
-rootProject.name = "OrataDesignWeb"
+rootProject.name = "OrataDesign-Web"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
