@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -34,10 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.oratakashi.design.app.navigation.contract.BaseNavigation
-import com.oratakashi.design.docs.Constant
+import com.oratakashi.design.docs.Config
 import com.oratakashi.design.docs.icons.LogoIcon
 import com.oratakashi.design.docs.models.sidebar.SidebarItem
-import com.oratakashi.design.docs.models.sidebar.SidebarSection
 import com.oratakashi.design.foundation.OrataTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,10 +72,10 @@ fun Sidebar(
     ) { innerPadding ->
 
         val selected = remember {
-            mutableStateOf(if (isDetailShow) Constant.defaultSelectionSidebar else null)
+            mutableStateOf(if (isDetailShow) Config.defaultSelectionSidebar else null)
         }
 
-        val sidebarItem = remember { Constant.sidebarItem }
+        val sidebarItem = remember { Config.sidebarItem }
 
         LazyColumn(
             modifier = Modifier
