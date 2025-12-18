@@ -1,6 +1,5 @@
 package com.oratakashi.design.docs.ui.component.code
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -14,16 +13,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +37,11 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
 
 @Composable
-fun Code() {
+fun Code(
+    canExpand: Boolean = false
+) {
     var expanded by remember { mutableStateOf(false) }
+    val minCollapsedHeight = 120.dp
 
     Card(
         modifier = Modifier
@@ -103,14 +101,14 @@ fun Code() {
                     """.trimIndent(),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
                         .then(
-                            if (!expanded) {
-                                Modifier.heightIn(max = 180.dp)
+                            if (canExpand && !expanded) {
+                                Modifier.heightIn(max = minCollapsedHeight)
                             } else {
                                 Modifier.wrapContentHeight()
                             }
-                        ),
+                        )
+                        .padding(16.dp),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily.Monospace
                     ),
@@ -118,7 +116,7 @@ fun Code() {
                 )
 
                 // Gradient Overlay saat collapsed
-                if (!expanded) {
+                if (canExpand && !expanded) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -137,12 +135,14 @@ fun Code() {
             }
 
             // Show/Hide Button
-            OraTransparentButton(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                label = if (expanded) "Hide code" else "Show code",
-                size = OraButtonSize.Small
-            )
+            if (canExpand) {
+                OraTransparentButton(
+                    onClick = { expanded = !expanded },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    label = if (expanded) "Hide code" else "Show code",
+                    size = OraButtonSize.Small
+                )
+            }
         }
     }
 }
