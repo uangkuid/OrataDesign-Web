@@ -51,6 +51,8 @@ kotlin {
             implementation(libs.constraintlayout.compose.multiplatform)
             implementation(libs.designsystem)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation("com.seanproctor:datatable-material3:0.11.7")
+            implementation("dev.snipme:highlights:1.1.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

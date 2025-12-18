@@ -85,9 +85,11 @@ internal fun <T : BaseNavigation> DetailContent(
         content =  { innerPadding ->
             Column(
                 modifier = Modifier
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(top = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                content.invoke()
             }
         }
     )

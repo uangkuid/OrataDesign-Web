@@ -87,7 +87,7 @@ fun ContentScreen(
 
             AnimatedPane {
                 val content = navigator.currentDestination?.contentKey
-                val showBack = remember { !NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue) }
+                val showBack = !NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
                 val backAction = remember {
                     {
                         navigateBack(navigator, coroutineScope)
