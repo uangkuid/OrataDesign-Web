@@ -4,7 +4,6 @@
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-blue.svg?style=flat&logo=kotlin)](http://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.10.0--rc01-blue)](https://github.com/JetBrains/compose-multiplatform)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 **Modern Cross-Platform Design System Documentation for Kotlin Multiplatform**
 
@@ -59,7 +58,7 @@ Before you begin, ensure you have the following installed:
 | Tool/Platform | Version Required |
 |--------------|------------------|
 | **Gradle** | 8.2 or newer |
-| **JDK** | 17 |
+| **JDK** | 11 or newer |
 | **Android SDK** | Min SDK 24, Target SDK 36 |
 | **IDE** | IntelliJ IDEA or Android Studio |
 
@@ -228,7 +227,7 @@ Please feel free to open an issue or submit a pull request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open source. Please check with the repository owner for license details.
 
 ## 🔗 Related Projects
 
