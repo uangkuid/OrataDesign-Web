@@ -40,17 +40,10 @@ fun CodeTextView(
             .generateAnnotatedString(highlights.getCode())
     }
 
-    Surface(
+    Text(
         modifier = modifier,
-        color = Color.Transparent
-    ) {
-        Text(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .horizontalScroll(rememberScrollState()),
-            text = textState
-        )
-    }
+        text = textState
+    )
 }
 
 internal const val TAB_LENGTH = 4

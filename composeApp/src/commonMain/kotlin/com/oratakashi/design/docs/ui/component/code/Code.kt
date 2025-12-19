@@ -1,5 +1,6 @@
 package com.oratakashi.design.docs.ui.component.code
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -35,11 +36,28 @@ import com.oratakashi.design.component.button.OraTransparentButton
 import com.oratakashi.design.foundation.OrataTheme
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
+import dev.snipme.highlights.Highlights
+import dev.snipme.highlights.model.SyntaxLanguage
+import dev.snipme.highlights.model.SyntaxThemes
 
 @Composable
 fun Code(
-    canExpand: Boolean = false
+    fileName: String = "",
+    code: String = "",
+    language: SyntaxLanguage = SyntaxLanguage.DEFAULT,
+    canExpand: Boolean = true
 ) {
+    val highlights = remember {
+        mutableStateOf(
+            Highlights
+                .Builder(
+                    code = code.trimIndent(),
+                    theme = SyntaxThemes.pastel(darkMode = true),
+                    language = language
+                )
+                .build()
+        )
+    }
     var expanded by remember { mutableStateOf(false) }
     val minCollapsedHeight = 120.dp
 
@@ -66,11 +84,13 @@ fun Code(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "app.css",
-                    style = OrataTheme.typography.bodyMedium(),
-                    color = OrataTheme.colors.onSurface
-                )
+                AnimatedVisibility(fileName.isNotBlank()) {
+                    Text(
+                        text = fileName,
+                        style = OrataTheme.typography.bodyMedium(),
+                        color = OrataTheme.colors.onSurface
+                    )
+                }
 
                 OraTransparentButton(
                     onClick = {
@@ -89,16 +109,11 @@ fun Code(
                 color = Color(0xFF3F3F46)
             )
 
-            // Code Content dengan Gradient Overlay
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = """
-                        @import 'tailwindcss';
-
-                        @custom-variant dark (&:where(.dark, .dark *));
-                    """.trimIndent(),
+                CodeTextView(
+                    highlights = highlights.value,
                     modifier = Modifier
                         .fillMaxWidth()
                         .then(
@@ -108,15 +123,11 @@ fun Code(
                                 Modifier.wrapContentHeight()
                             }
                         )
-                        .padding(16.dp),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily.Monospace
-                    ),
-                    color = Color(0xFFD4D4D8)
+                        .padding(16.dp)
                 )
 
                 // Gradient Overlay saat collapsed
-                if (canExpand && !expanded) {
+                if (code.isNotBlank() && canExpand && !expanded) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -135,7 +146,15 @@ fun Code(
             }
 
             // Show/Hide Button
-            if (canExpand) {
+            if (code.isNotBlank() && canExpand) {
+
+                AnimatedVisibility(expanded) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                    )
+                }
+
                 OraTransparentButton(
                     onClick = { expanded = !expanded },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),

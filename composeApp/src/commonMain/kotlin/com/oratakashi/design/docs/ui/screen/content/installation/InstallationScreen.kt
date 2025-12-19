@@ -1,6 +1,7 @@
 package com.oratakashi.design.docs.ui.screen.content.installation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,7 +38,10 @@ fun InstallationScreen(
         navigation = InstallationNavigation
     ) {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+            contentPadding = PaddingValues(
+                vertical = 16.dp
+            )
         ) {
             item(
                 key = "Prequisites"
@@ -128,28 +132,21 @@ fun InstallationScreen(
                     content = {
                         Text("Add UI Kit Dependency on build.gradle")
 
-                        val highlights = remember {
-                            mutableStateOf(
-                                Highlights
-                                    .Builder(
-                                        code = """
-                                            Box(
-                                                modifier = Modifier
-                                                    .height(800.dp)
-                                            ) {
-                                                CodeTextView(
-                                                    highlights = highlights.value
-                                                )
-                                            }
-                                        """.trimIndent(),
-                                        theme = SyntaxThemes.pastel(darkMode = true),
-                                        language = SyntaxLanguage.KOTLIN
-                                    )
-                                    .build()
-                            )
-                        }
+                        Code(
+                            fileName = "build.gradle.kts",
+                            code = "implementation(\"com.oratakashi:design:0.0.1-Alpha\")",
+                            language = SyntaxLanguage.KOTLIN,
+                            canExpand = false
+                        )
 
-                        Code()
+                        Text("Add Jetifier Support on Project gradle.properties")
+
+                        Code(
+                            fileName = "gradle.properties",
+                            code = "android.enableJetifier = true;",
+                            language = SyntaxLanguage.KOTLIN,
+                            canExpand = false
+                        )
 
 //                        Box(
 //                            modifier = Modifier
