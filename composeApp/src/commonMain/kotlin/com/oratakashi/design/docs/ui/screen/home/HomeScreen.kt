@@ -11,7 +11,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.oratakashi.design.component.button.OraTonalButton
 import com.oratakashi.design.docs.icons.LogoIcon
-import com.oratakashi.design.docs.theme.LocalTheme
 import com.oratakashi.design.foundation.OrataTheme
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowRight

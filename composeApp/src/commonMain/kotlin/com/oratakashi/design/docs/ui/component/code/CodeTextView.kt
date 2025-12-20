@@ -3,6 +3,7 @@ package com.oratakashi.design.docs.ui.component.code
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,10 +41,12 @@ fun CodeTextView(
             .generateAnnotatedString(highlights.getCode())
     }
 
-    Text(
-        modifier = modifier,
-        text = textState
-    )
+    SelectionContainer {
+        Text(
+            modifier = modifier,
+            text = textState
+        )
+    }
 }
 
 internal const val TAB_LENGTH = 4

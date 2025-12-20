@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.component.button.OraButtonSize
 import com.oratakashi.design.component.button.OraTransparentButton
@@ -47,16 +45,14 @@ fun Code(
     language: SyntaxLanguage = SyntaxLanguage.DEFAULT,
     canExpand: Boolean = true
 ) {
-    val highlights = remember {
-        mutableStateOf(
-            Highlights
-                .Builder(
-                    code = code.trimIndent(),
-                    theme = SyntaxThemes.pastel(darkMode = true),
-                    language = language
-                )
-                .build()
-        )
+    val highlights = remember(code, language) {
+        Highlights
+            .Builder(
+                code = code.trimIndent(),
+                theme = SyntaxThemes.pastel(darkMode = true),
+                language = language
+            )
+            .build()
     }
     var expanded by remember { mutableStateOf(false) }
     val minCollapsedHeight = 120.dp
@@ -113,7 +109,7 @@ fun Code(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CodeTextView(
-                    highlights = highlights.value,
+                    highlights = highlights,
                     modifier = Modifier
                         .fillMaxWidth()
                         .then(

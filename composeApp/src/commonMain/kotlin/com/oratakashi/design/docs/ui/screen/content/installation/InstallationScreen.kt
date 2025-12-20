@@ -44,7 +44,7 @@ fun InstallationScreen(
             )
         ) {
             item(
-                key = "Prequisites"
+                key = "prequisites"
             ) {
                 ContentSection(
                     title = "Prequisites",
@@ -125,7 +125,7 @@ fun InstallationScreen(
             }
 
             item(
-                key = "Installation"
+                key = "installation"
             ) {
                 ContentSection(
                     title = "Installation",

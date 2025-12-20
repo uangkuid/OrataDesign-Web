@@ -56,6 +56,7 @@ fun Sidebar(
                         Icon(
                             imageVector = LogoIcon.icons(),
                             null,
+                            tint = OrataTheme.colors.primary,
                             modifier = Modifier
                                 .width(32.dp)
                                 .height(32.dp)

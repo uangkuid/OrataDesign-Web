@@ -1,9 +1,3 @@
-package com.oratakashi.design.docs.theme
-
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import com.oratakashi.design.foundation.typography.OrataDesignTypography
-
 class Typography: OrataDesignTypography {
     @Composable
     override fun displayLarge(): TextStyle {
