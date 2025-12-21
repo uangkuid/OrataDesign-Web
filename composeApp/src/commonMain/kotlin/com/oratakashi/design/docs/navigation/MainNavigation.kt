@@ -1,6 +1,6 @@
 package com.oratakashi.design.docs.navigation
 
-import com.oratakashi.design.app.navigation.contract.BaseNavigation
+import com.oratakashi.design.docs.navigation.BaseNavigation
 import kotlinx.serialization.Serializable
 
 @Serializable

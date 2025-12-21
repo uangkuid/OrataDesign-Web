@@ -1,6 +1,6 @@
 package com.oratakashi.design.docs.models.sidebar
 
-import com.oratakashi.design.app.navigation.contract.BaseNavigation
+import com.oratakashi.design.docs.navigation.BaseNavigation
 
 data class SidebarItem(
     val label: String,

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.oratakashi.design.app.navigation.contract.BaseNavigation
+import com.oratakashi.design.docs.navigation.BaseNavigation
 import com.oratakashi.design.docs.Config
 import com.oratakashi.design.docs.icons.LogoIcon
 import com.oratakashi.design.docs.models.sidebar.SidebarItem
