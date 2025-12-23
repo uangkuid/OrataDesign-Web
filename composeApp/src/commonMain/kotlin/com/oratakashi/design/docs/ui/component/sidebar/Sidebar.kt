@@ -18,7 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -35,7 +39,10 @@ import com.oratakashi.design.docs.navigation.BaseNavigation
 import com.oratakashi.design.docs.Config
 import com.oratakashi.design.docs.icons.LogoIcon
 import com.oratakashi.design.docs.models.sidebar.SidebarItem
+import com.oratakashi.design.docs.models.sidebar.SidebarSection
 import com.oratakashi.design.foundation.OrataTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +79,14 @@ fun Sidebar(
         modifier = modifier
     ) { innerPadding ->
 
-        val sidebarItem = remember { Config.sidebarItem }
+        var sidebarItem by remember { mutableStateOf(emptyList<SidebarSection>()) }
+
+        val coroutineScope = rememberCoroutineScope()
+
+        coroutineScope.launch {
+            delay(100)
+            sidebarItem = Config.sidebarItem
+        }
 
         // Determine selected item based on conditions:
         // - If isDetailShow is false, selected is always null
