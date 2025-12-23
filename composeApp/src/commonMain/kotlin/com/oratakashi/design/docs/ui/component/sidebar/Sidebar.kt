@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +41,7 @@ import com.oratakashi.design.foundation.OrataTheme
 @Composable
 fun Sidebar(
     isDetailShow: Boolean = false,
+    currentRoute: String? = null,
     onSidebarClick: (BaseNavigation?) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -72,11 +72,22 @@ fun Sidebar(
         modifier = modifier
     ) { innerPadding ->
 
-        val selected = remember {
-            mutableStateOf(if (isDetailShow) Config.defaultSelectionSidebar else null)
-        }
-
         val sidebarItem = remember { Config.sidebarItem }
+
+        // Determine selected item based on conditions:
+        // - If isDetailShow is false, selected is always null
+        // - If isDetailShow is true and currentRoute is null, use default selection
+        // - If isDetailShow is true and currentRoute is not null, find matching item
+        val selected = remember(isDetailShow, currentRoute, sidebarItem) {
+            when {
+                !isDetailShow -> null
+                currentRoute == null -> Config.defaultSelectionSidebar
+                else -> {
+                    sidebarItem.flatMap { it.item }
+                        .firstOrNull { it.navigation?.route == currentRoute }
+                }
+            }
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -107,9 +118,8 @@ fun Sidebar(
                 ) {
                     SidebarMenu(
                         data = it,
-                        isSelected = it == selected.value,
+                        isSelected = it == selected,
                         onClick = {
-                            selected.value = it
                             onSidebarClick.invoke(it.navigation)
                         },
                     )

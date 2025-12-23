@@ -1,5 +1,7 @@
 package com.oratakashi.design.docs.ui.screen.content
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.VerticalDragHandle
@@ -12,12 +14,17 @@ import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.oratakashi.design.docs.helpers.NavigationHelpers
 import com.oratakashi.design.docs.navigation.page.AlertNavigation
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
@@ -48,6 +55,8 @@ fun ContentScreen(
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
     val coroutineScope = rememberCoroutineScope()
+    val navController = rememberNavController()
+    var isNavHostReady by remember { mutableStateOf(false) }
 
     BackHandler(
         enabled = navigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)
@@ -57,8 +66,6 @@ fun ContentScreen(
             navigator = navigator
         )
     }
-
-
 
     ListDetailPaneScaffold(
         directive = navigator.scaffoldDirective,
@@ -79,84 +86,108 @@ fun ContentScreen(
         },
         listPane = {
             AnimatedPane {
-                val initialState =
-                    remember { NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue) }
+                val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
+                val currentRoute = navController.currentDestination?.route
                 Sidebar(
                     isDetailShow = initialState,
+                    currentRoute = currentRoute,
                     onSidebarClick = {
-                        coroutineScope.launch {
-                            navigator.navigateTo(ThreePaneScaffoldRole.Primary, it?.route)
+                        // Only navigate if the clicked item is different from current route
+                        if (it?.route != currentRoute) {
+                            coroutineScope.launch {
+                                navigator.navigateTo(ThreePaneScaffoldRole.Primary, it?.route)
+
+                                if (isNavHostReady) {
+                                    navController.navigate(it?.route.orEmpty()) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            }
                         }
                     }
                 )
             }
         },
         detailPane = {
-            LaunchedEffect(Unit) {
-                if (NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)) {
-                    coroutineScope.launch {
-                        navigator.navigateTo(
-                            ThreePaneScaffoldRole.Primary,
-                            InstallationNavigation.route
-                        )
-                    }
-                }
-            }
 
             AnimatedPane {
-                val content = navigator.currentDestination?.contentKey
                 val showBack = !NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
                 val backAction = remember {
                     {
+                        navController.navigateUp()
                         navigateBack(navigator, coroutineScope)
                     }
                 }
 
-                when (content) {
-                    InstallationNavigation.route -> InstallationScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                NavHost(
+                    navController = navController,
+                    startDestination = InstallationNavigation,
+                    enterTransition = { fadeIn() },
+                    exitTransition = { fadeOut() },
+                ) {
+                    isNavHostReady = true
+                    composable<InstallationNavigation> {
+                        InstallationScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    ConfigurationNavigation.route -> ConfigurationScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<ConfigurationNavigation> {
+                        ConfigurationScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    ColorSystemNavigation.route -> ColorSystemScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<ColorSystemNavigation> {
+                        ColorSystemScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    TypographyNavigation.route -> TypographyScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<TypographyNavigation> {
+                        TypographyScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    AlertNavigation.route -> AlertScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<AlertNavigation> {
+                        AlertScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    AnchorTextNavigation.route -> AnchorTextScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<AnchorTextNavigation> {
+                        AnchorTextScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    ButtonNavigation.route -> ButtonScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<ButtonNavigation> {
+                        ButtonScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    SnackbarNavigation.route -> SnackbarScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<SnackbarNavigation> {
+                        SnackbarScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
 
-                    TextFieldNavigation.route -> TextFieldScreen(
-                        showBack = showBack,
-                        onBackClick = backAction
-                    )
+                    composable<TextFieldNavigation> {
+                        TextFieldScreen(
+                            showBack = showBack,
+                            onBackClick = backAction
+                        )
+                    }
                 }
             }
         }
