@@ -21,10 +21,16 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun App(
+    hasDeeplink: Boolean = false,
     onNavHostReady: suspend (NavController) -> Unit = {}
 ) {
     val navController = rememberNavController()
     OrataAppTheme(darkTheme = true) {
+        LaunchedEffect(hasDeeplink) {
+            if (hasDeeplink) {
+                navController.navigate(MainNavigation)
+            }
+        }
         Surface {
             NavHost(
                 navController = navController,

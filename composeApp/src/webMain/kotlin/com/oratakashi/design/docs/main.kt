@@ -1,5 +1,6 @@
 package com.oratakashi.design.docs
 
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import androidx.navigation.ExperimentalBrowserHistoryApi
@@ -9,7 +10,8 @@ import com.oratakashi.design.docs.navigation.MainNavigation
 import com.oratakashi.design.docs.ui.App
 import kotlinx.browser.document
 import kotlinx.browser.window
-import com.oratakashi.design.docs.Config
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalBrowserHistoryApi::class)
 fun main() {
@@ -25,9 +27,40 @@ fun main() {
             }
             .toMap()
 
+        // Build a slug -> route map (slug derived same way as in bindToBrowserNavigation)
+        val slugToRoute: Map<String, String> = routeToLabel
+            .map { (route, label) ->
+                val slug = label.lowercase().replace("\\s+".toRegex(), "")
+                slug to route
+            }
+            .toMap()
+
+        // Read initial slug from URL (e.g., ?page=installation) and navigate directly
+        val initSlug = window.location.search
+            .substringAfter("?page=", "")
+            .substringBefore("&")
+
+        println("initSlug: $initSlug")
+        val coroutineScope = rememberCoroutineScope()
+
         App(
-            onNavHostReady = {
-                it.bindToBrowserNavigation { entry ->
+            hasDeeplink = initSlug.isNotEmpty(),
+            onNavHostReady = { navController ->
+                coroutineScope.launch {
+                    if (initSlug.isNotEmpty()) {
+                        val targetRoute = slugToRoute[initSlug]
+                        println("initSlug: $initSlug - $targetRoute")
+                        if (targetRoute != null) {
+                            println("Try to naviagate: $initSlug -> $targetRoute")
+                            navController.navigate(targetRoute) {
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                }
+
+                // Bind browser navigation first, so initial navigate updates title and query param
+                navController.bindToBrowserNavigation { entry ->
                     val route = entry.destination.route.orEmpty()
                     when {
                         route == HomeNavigation.route -> {
