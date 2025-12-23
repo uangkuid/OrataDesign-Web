@@ -1,6 +1,7 @@
 package com.oratakashi.design.docs.navigation
 
 import com.oratakashi.design.docs.navigation.BaseNavigation
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
