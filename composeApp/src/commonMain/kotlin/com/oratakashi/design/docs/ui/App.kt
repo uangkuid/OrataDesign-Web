@@ -44,6 +44,7 @@ fun App(
 
                 composable<MainNavigation> {
                     ContentScreen(
+                        onNavHostReady = onNavHostReady,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

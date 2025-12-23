@@ -14,6 +14,7 @@ import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -51,12 +53,17 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ContentScreen(
+    onNavHostReady: suspend (NavController) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
     var isNavHostReady by remember { mutableStateOf(false) }
+
+    LaunchedEffect(navController) {
+        onNavHostReady(navController)
+    }
 
     BackHandler(
         enabled = navigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)
