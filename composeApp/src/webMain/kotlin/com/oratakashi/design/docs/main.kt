@@ -5,6 +5,7 @@ import androidx.compose.ui.window.ComposeViewport
 import androidx.navigation.ExperimentalBrowserHistoryApi
 import androidx.navigation.bindToBrowserNavigation
 import com.oratakashi.design.docs.navigation.HomeNavigation
+import com.oratakashi.design.docs.navigation.MainNavigation
 import com.oratakashi.design.docs.ui.App
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -31,6 +32,11 @@ fun main() {
                     when {
                         route == HomeNavigation.route -> {
                             window.document.title = "Home - Orata Design System"
+                            ""
+                        }
+                        route == MainNavigation.route -> {
+                            // Ignore MainNavigation: no query param, keep a generic title
+                            window.document.title = "Orata Design System"
                             ""
                         }
                         else -> {

@@ -24,9 +24,6 @@ fun App(
     onNavHostReady: suspend (NavController) -> Unit = {}
 ) {
     val navController = rememberNavController()
-    LaunchedEffect(navController) {
-        onNavHostReady(navController)
-    }
     OrataAppTheme(darkTheme = true) {
         Surface {
             NavHost(

@@ -26,6 +26,7 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.oratakashi.design.docs.helpers.NavigationHelpers
 import com.oratakashi.design.docs.navigation.page.AlertNavigation
@@ -60,9 +61,17 @@ fun ContentScreen(
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
     var isNavHostReady by remember { mutableStateOf(false) }
+    var currentRoute by remember { mutableStateOf(navController.currentDestination?.route) }
 
     LaunchedEffect(navController) {
         onNavHostReady(navController)
+    }
+
+    coroutineScope.launch {
+        navController.currentBackStack.collect {
+            val route = it.last().destination.route
+            currentRoute = route
+        }
     }
 
     BackHandler(
@@ -94,7 +103,6 @@ fun ContentScreen(
         listPane = {
             AnimatedPane {
                 val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
-                val currentRoute = navController.currentDestination?.route
                 Sidebar(
                     isDetailShow = initialState,
                     currentRoute = currentRoute,
