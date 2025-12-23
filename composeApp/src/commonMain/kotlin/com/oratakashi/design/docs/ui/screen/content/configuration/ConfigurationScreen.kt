@@ -91,6 +91,35 @@ fun ConfigurationScreen(
                     }
                 )
             }
+
+            item(
+                key = "configure_theme"
+            ) {
+                ContentSection(
+                    title = "Configure Theme",
+                    content = {
+                        Text("After configuring your color scheme and typography, the next required step is to set up the application theme.")
+
+                        Text("Orata Design follows a theming approach that is intentionally similar to the standard Material Theme configuration, ensuring a smooth and familiar experience for Android developers. To apply the theme, you only need to create a composable function that wraps your application with `OrataAppTheme`, providing the color and typography configurations that represent your app’s visual identity.")
+
+                        Text("This centralized theme configuration allows Orata to consistently propagate design tokens—such as colors and typography—throughout the entire UI, ensuring visual coherence, scalability, and ease of maintenance across all supported platforms.")
+
+                        var bytesThemeCode by remember {
+                            mutableStateOf(ByteArray(0))
+                        }
+
+                        LaunchedEffect(Unit) {
+                            bytesThemeCode = Res.readBytes("files/configuration/theme.kt")
+                        }
+
+                        Code(
+                            fileName = "Theme.kt",
+                            code = bytesThemeCode.decodeToString(),
+                            canExpand = true
+                        )
+                    }
+                )
+            }
         }
     }
 }

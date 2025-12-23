@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import com.oratakashi.design.foundation.typography.OrataDesignTypography
 
-class Typography: OrataDesignTypography {
+class MyTypography: OrataDesignTypography {
     @Composable
     override fun displayLarge(): TextStyle {
         TODO("Implement your own TextStyle")

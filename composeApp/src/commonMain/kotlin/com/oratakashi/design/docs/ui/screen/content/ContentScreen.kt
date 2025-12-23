@@ -1,9 +1,13 @@
 package com.oratakashi.design.docs.ui.screen.content
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
@@ -54,10 +58,25 @@ fun ContentScreen(
         )
     }
 
+
+
     ListDetailPaneScaffold(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         modifier = modifier,
+        paneExpansionState = rememberPaneExpansionState(navigator.scaffoldValue),
+        paneExpansionDragHandle = { state ->
+            val interactionSource =
+                remember { MutableInteractionSource() }
+            VerticalDragHandle(
+                modifier =
+                    Modifier.paneExpansionDraggable(
+                        state,
+                        LocalMinimumInteractiveComponentSize.current,
+                        interactionSource
+                    ), interactionSource = interactionSource
+            )
+        },
         listPane = {
             AnimatedPane {
                 val initialState =
@@ -73,7 +92,6 @@ fun ContentScreen(
             }
         },
         detailPane = {
-
             LaunchedEffect(Unit) {
                 if (NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)) {
                     coroutineScope.launch {
@@ -142,6 +160,7 @@ fun ContentScreen(
                 }
             }
         }
+
     )
 }
 
