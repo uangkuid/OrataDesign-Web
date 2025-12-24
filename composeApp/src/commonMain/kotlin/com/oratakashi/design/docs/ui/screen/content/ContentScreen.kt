@@ -3,6 +3,8 @@ package com.oratakashi.design.docs.ui.screen.content
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -29,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.oratakashi.design.docs.helpers.NavigationHelpers
+import com.oratakashi.design.docs.navigation.DefaultNavigation
 import com.oratakashi.design.docs.navigation.page.AlertNavigation
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation
@@ -69,7 +72,7 @@ fun ContentScreen(
 
     coroutineScope.launch {
         navController.currentBackStack.collect {
-            val route = it.last().destination.route
+            val route = it.lastOrNull()?.destination?.route
             currentRoute = route
         }
     }
@@ -79,7 +82,8 @@ fun ContentScreen(
     ) {
         navigateBack(
             coroutineScope = coroutineScope,
-            navigator = navigator
+            navigator = navigator,
+            navController = navController
         )
     }
 
@@ -112,11 +116,11 @@ fun ContentScreen(
                             coroutineScope.launch {
                                 navigator.navigateTo(ThreePaneScaffoldRole.Primary, it?.route)
 
-                                if (isNavHostReady) {
-                                    navController.navigate(it?.route.orEmpty()) {
-                                        launchSingleTop = true
-                                    }
-                                }
+//                                if (isNavHostReady) {
+//                                    navController.navigate(it?.route.orEmpty()) {
+//                                        launchSingleTop = true
+//                                    }
+//                                }
                             }
                         }
                     }
@@ -127,20 +131,35 @@ fun ContentScreen(
 
             AnimatedPane {
                 val showBack = !NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
+                val currentRoute = navigator.currentDestination?.contentKey
                 val backAction = remember {
                     {
-                        navController.navigateUp()
-                        navigateBack(navigator, coroutineScope)
+                        navigateBack(
+                            navController = navController,
+                            navigator = navigator,
+                            coroutineScope = coroutineScope
+                        )
+                    }
+                }
+
+                LaunchedEffect(currentRoute) {
+                    navController.navigate(currentRoute.orEmpty()) {
+                        launchSingleTop = true
                     }
                 }
 
                 NavHost(
                     navController = navController,
-                    startDestination = InstallationNavigation,
+                    startDestination = DefaultNavigation,
                     enterTransition = { fadeIn() },
                     exitTransition = { fadeOut() },
                 ) {
                     isNavHostReady = true
+
+                    composable<DefaultNavigation> {
+                        Box(modifier = Modifier.fillMaxWidth()) {}
+                    }
+
                     composable<InstallationNavigation> {
                         InstallationScreen(
                             showBack = showBack,
@@ -212,10 +231,12 @@ fun ContentScreen(
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 internal fun navigateBack(
+    navController: NavController,
     navigator: ThreePaneScaffoldNavigator<String?>,
     coroutineScope: CoroutineScope
 ) {
     coroutineScope.launch {
         navigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
+        navController.navigateUp()
     }
 }
