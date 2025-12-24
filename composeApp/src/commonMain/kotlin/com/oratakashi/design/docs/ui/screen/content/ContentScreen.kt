@@ -69,7 +69,7 @@ fun ContentScreen(
 
     coroutineScope.launch {
         navController.currentBackStack.collect {
-            val route = it.last().destination.route
+            val route = it.lastOrNull()?.destination?.route
             currentRoute = route
         }
     }

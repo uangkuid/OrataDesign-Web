@@ -31,7 +31,9 @@ fun App(
                 navController.navigate(MainNavigation)
             }
         }
-        Surface {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
             NavHost(
                 navController = navController,
                 startDestination = HomeNavigation,
