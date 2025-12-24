@@ -14,7 +14,7 @@ composeHotReload = "1.1.0-alpha01"
 constraintlayoutComposeMultiplatform = "0.6.1"
 design = "0.0.2-Alpha"
 junit = "4.13.2"
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 
 kotlinx-coroutines = "1.10.2"
 navigation-compose = "2.9.1"
