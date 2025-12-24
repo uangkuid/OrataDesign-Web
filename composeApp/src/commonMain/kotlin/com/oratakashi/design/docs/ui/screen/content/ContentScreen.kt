@@ -28,7 +28,6 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.oratakashi.design.docs.helpers.NavigationHelpers
 import com.oratakashi.design.docs.navigation.DefaultNavigation
@@ -143,14 +142,16 @@ fun ContentScreen(
                 }
 
                 LaunchedEffect(currentRoute) {
-                    navController.navigate(currentRoute.orEmpty()) {
-                        launchSingleTop = true
+                    if (!currentRoute.isNullOrEmpty()) {
+                        navController.navigate(currentRoute) {
+                            launchSingleTop = true
+                        }
                     }
                 }
 
                 NavHost(
                     navController = navController,
-                    startDestination = DefaultNavigation,
+                    startDestination = if (showBack) DefaultNavigation else InstallationNavigation,
                     enterTransition = { fadeIn() },
                     exitTransition = { fadeOut() },
                 ) {
