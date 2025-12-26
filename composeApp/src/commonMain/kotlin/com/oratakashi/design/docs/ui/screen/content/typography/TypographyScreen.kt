@@ -98,7 +98,7 @@ fun TypographyScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Display Large",
@@ -130,7 +130,7 @@ fun TypographyScreen(
                                 }
                             }
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Display Medium",
@@ -162,7 +162,7 @@ fun TypographyScreen(
                                 }
                             }
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Display Small",
@@ -242,7 +242,7 @@ fun TypographyScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Headline Large",
@@ -274,7 +274,7 @@ fun TypographyScreen(
                                 }
                             }
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Headline Medium",
@@ -306,7 +306,7 @@ fun TypographyScreen(
                                 }
                             }
                             row {
-                                onClick = {  }
+                                onClick = { }
                                 cell {
                                     Text(
                                         text = "Headline Small",
@@ -318,7 +318,7 @@ fun TypographyScreen(
 
                                 cell {
                                     InlineCode(
-                                        code = "OrataTheme.typography.displaySmall()",
+                                        code = "OrataTheme.typography.headlineSmall()",
                                         language = SyntaxLanguage.KOTLIN
                                     )
                                 }
@@ -333,6 +333,295 @@ fun TypographyScreen(
                                 cell {
                                     InlineCode(
                                         code = "32.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "title"
+            ) {
+                ContentSection(
+                    title = "Title",
+                    content = {
+                        Text("Title styles are smaller in scale than headlines and are intended for medium-emphasis text that remains relatively concise. They are well suited for organizing content by dividing secondary passages of text or delineating secondary regions within a layout, providing structure without overwhelming the primary hierarchy.")
+                        Text("When working with titles, extra care should be taken when using expressive typefaces, such as display, handwritten, or script fonts. While these styles can add character, they may negatively impact readability at smaller sizes. In most cases, more restrained and highly legible typefaces are recommended to ensure clarity and consistency across the interface.")
+
+                        DataTable(
+                            columns = listOf(
+                                DataColumn {
+                                    Text(
+                                        "Preview",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Token Name",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Size",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Weight",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                            ),
+                            rowHeight = Dp.Unspecified,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Title Large",
+                                        style = OrataTheme.typography.titleLarge(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleLarge()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "22.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "28.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Title Medium",
+                                        style = OrataTheme.typography.titleMedium(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleMedium()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "16.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "24.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Title Small",
+                                        style = OrataTheme.typography.titleSmall(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleSmall()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "14.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "20.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "body"
+            ) {
+                ContentSection(
+                    title = "Body",
+                    content = {
+                        Text("Body styles are intended for long-form text content within your application, such as paragraphs, descriptions, and detailed explanations.")
+                        Text("For body text, it is important to use typefaces specifically designed for readability at smaller sizes, ensuring that content can be read comfortably over extended periods. These typefaces typically offer balanced letterforms, consistent spacing, and clear character distinction.")
+                        Text("Expressive or decorative fonts should be avoided for body text, as they tend to reduce legibility at smaller sizes and can negatively impact the overall reading experience. Prioritizing clarity and consistency in body typography helps maintain usability across all devices and platforms.")
+
+                        DataTable(
+                            columns = listOf(
+                                DataColumn {
+                                    Text(
+                                        "Preview",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Token Name",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Size",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Weight",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                            ),
+                            rowHeight = Dp.Unspecified,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Body Large",
+                                        style = OrataTheme.typography.titleLarge(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleLarge()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "22.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "28.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Body Medium",
+                                        style = OrataTheme.typography.titleMedium(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleMedium()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "16.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "24.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Body Small",
+                                        style = OrataTheme.typography.titleSmall(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.titleSmall()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "14.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "20.dp",
                                         language = SyntaxLanguage.KOTLIN
                                     )
                                 }
