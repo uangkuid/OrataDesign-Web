@@ -17,6 +17,7 @@ import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -151,7 +152,7 @@ fun ContentScreen(
 
                 NavHost(
                     navController = navController,
-                    startDestination = if (showBack) DefaultNavigation else InstallationNavigation,
+                    startDestination = DefaultNavigation,
                     enterTransition = { fadeIn() },
                     exitTransition = { fadeOut() },
                 ) {
