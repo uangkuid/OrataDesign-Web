@@ -535,7 +535,7 @@ fun TypographyScreen(
                                 cell {
                                     Text(
                                         text = "Body Large",
-                                        style = OrataTheme.typography.titleLarge(),
+                                        style = OrataTheme.typography.bodyLarge(),
                                         modifier = Modifier
                                             .padding(vertical = 8.dp)
                                     )
@@ -543,39 +543,7 @@ fun TypographyScreen(
 
                                 cell {
                                     InlineCode(
-                                        code = "OrataTheme.typography.titleLarge()",
-                                        language = SyntaxLanguage.KOTLIN
-                                    )
-                                }
-
-                                cell {
-                                    InlineCode(
-                                        code = "22.dp",
-                                        language = SyntaxLanguage.KOTLIN
-                                    )
-                                }
-
-                                cell {
-                                    InlineCode(
-                                        code = "28.dp",
-                                        language = SyntaxLanguage.KOTLIN
-                                    )
-                                }
-                            }
-                            row {
-                                onClick = { }
-                                cell {
-                                    Text(
-                                        text = "Body Medium",
-                                        style = OrataTheme.typography.titleMedium(),
-                                        modifier = Modifier
-                                            .padding(vertical = 8.dp)
-                                    )
-                                }
-
-                                cell {
-                                    InlineCode(
-                                        code = "OrataTheme.typography.titleMedium()",
+                                        code = "OrataTheme.typography.bodyLarge()",
                                         language = SyntaxLanguage.KOTLIN
                                     )
                                 }
@@ -598,8 +566,8 @@ fun TypographyScreen(
                                 onClick = { }
                                 cell {
                                     Text(
-                                        text = "Body Small",
-                                        style = OrataTheme.typography.titleSmall(),
+                                        text = "Body Medium",
+                                        style = OrataTheme.typography.bodyMedium(),
                                         modifier = Modifier
                                             .padding(vertical = 8.dp)
                                     )
@@ -607,7 +575,7 @@ fun TypographyScreen(
 
                                 cell {
                                     InlineCode(
-                                        code = "OrataTheme.typography.titleSmall()",
+                                        code = "OrataTheme.typography.bodyMedium()",
                                         language = SyntaxLanguage.KOTLIN
                                     )
                                 }
@@ -622,6 +590,182 @@ fun TypographyScreen(
                                 cell {
                                     InlineCode(
                                         code = "20.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Body Small",
+                                        style = OrataTheme.typography.bodySmall(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.bodySmall()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "12.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "16.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "label"
+            ) {
+                ContentSection(
+                    title = "Label",
+                    content = {
+                        Text("Label styles are small, utilitarian text styles designed for functional and supportive use cases. They are commonly applied to text within UI components—such as buttons, tabs, or form fields—as well as very small text in the content body, including captions, annotations, or helper text.")
+                        Text("Because of their size and purpose, label styles should prioritize clarity and precision over expressiveness. Well-defined label typography ensures that essential information remains legible and accessible, even in dense or compact interface areas.")
+
+                        DataTable(
+                            columns = listOf(
+                                DataColumn {
+                                    Text(
+                                        "Preview",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Token Name",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Size",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                                DataColumn {
+                                    Text(
+                                        "Font Weight",
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                },
+                            ),
+                            rowHeight = Dp.Unspecified,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Label Large",
+                                        style = OrataTheme.typography.labelLarge(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.labelLarge()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "14.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "20.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Label Medium",
+                                        style = OrataTheme.typography.labelMedium(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.labelMedium()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "12.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "16.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+                            }
+                            row {
+                                onClick = { }
+                                cell {
+                                    Text(
+                                        text = "Label Small",
+                                        style = OrataTheme.typography.labelSmall(),
+                                        modifier = Modifier
+                                            .padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "OrataTheme.typography.labelSmall()",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "11.dp",
+                                        language = SyntaxLanguage.KOTLIN
+                                    )
+                                }
+
+                                cell {
+                                    InlineCode(
+                                        code = "16.dp",
                                         language = SyntaxLanguage.KOTLIN
                                     )
                                 }
