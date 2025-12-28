@@ -140,7 +140,6 @@ private fun TabItem(
         modifier = modifier
             .clip(CircleShape)
             .clickable(
-                indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onClick
             )
