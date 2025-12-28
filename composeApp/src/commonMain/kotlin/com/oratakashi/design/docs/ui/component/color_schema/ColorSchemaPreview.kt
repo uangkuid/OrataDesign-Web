@@ -1,4 +1,4 @@
-package com.oratakashi.design.docs.ui.component.colorschema
+package com.oratakashi.design.docs.ui.component.color_schema
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -463,28 +463,5 @@ fun ColorSchemaPreview(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun ColorSchemaItem(
-    text: String = "Surface",
-    backgroundColor: Color = OrataTheme.colors.surface,
-    contentColor: Color = OrataTheme.colors.onSurface,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        color = backgroundColor,
-        contentColor = contentColor,
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            text = text,
-            style = OrataTheme.typography.bodyMedium(),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(3.dp)
-        )
     }
 }
