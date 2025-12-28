@@ -2,9 +2,11 @@ package com.oratakashi.design.docs.ui.component.colorschema
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,19 +44,19 @@ fun ColorSchemaPreview(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(900.dp)
+                .height(800.dp)
         ) {
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize()
             ) {
-                val (rowNormal, rowFix, rowSurface, footer) = createRefs()
+                val (rowNormal, rowSurface, footer) = createRefs()
 
                 Text(
                     text = "Diagram of all Orata Design color roles, including optional add-on roles for surface colors and fixed accent colors",
                     modifier = Modifier.constrainAs(footer) {
                         bottom.linkTo(parent.bottom, 16.dp)
-                        start.linkTo(parent.start, 16.dp)
-                        end.linkTo(parent.end, 16.dp)
+                        start.linkTo(parent.start, 24.dp)
+                        end.linkTo(parent.end, 24.dp)
 
                         width = Dimension.fillToConstraints
                     }
@@ -65,155 +67,11 @@ fun ColorSchemaPreview(
                         top.linkTo(parent.top, 24.dp)
                         start.linkTo(parent.start, 24.dp)
                         end.linkTo(parent.end, 24.dp)
-                        bottom.linkTo(rowFix.top)
-                        height = Dimension.fillToConstraints
-                        width = Dimension.fillToConstraints
-                    }
-
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .fillMaxHeight()
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .padding(start = 4.dp)
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .padding(start = 4.dp)
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .weight(1f)
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-
-                FlowRow(
-                    modifier = Modifier.constrainAs(rowFix) {
-                        top.linkTo(rowNormal.bottom, 24.dp)
-                        start.linkTo(parent.start, 24.dp)
-                        end.linkTo(parent.end, 24.dp)
                         bottom.linkTo(rowSurface.top)
                         height = Dimension.fillToConstraints
                         width = Dimension.fillToConstraints
                     }
+
                 ) {
                     Column(
                         modifier = Modifier.weight(1f)
@@ -253,30 +111,30 @@ fun ColorSchemaPreview(
                             .padding(start = 4.dp)
                     ) {
                         ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
+                            text = "Secondary",
+                            backgroundColor = OrataTheme.colors.secondary,
+                            contentColor = OrataTheme.colors.onSecondary,
                             modifier = Modifier.weight(1f)
                         )
                         ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
+                            text = "On Secondary",
+                            backgroundColor = OrataTheme.colors.onSecondary,
+                            contentColor = OrataTheme.colors.secondary,
                             modifier = Modifier.weight(1f)
                         )
 
                         ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
+                            text = "Secondary Container",
+                            backgroundColor = OrataTheme.colors.secondaryContainer,
+                            contentColor = OrataTheme.colors.onSecondaryContainer,
                             modifier = Modifier.weight(1f)
                                 .padding(top = 4.dp)
                         )
 
                         ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
+                            text = "On Secondary Container",
+                            backgroundColor = OrataTheme.colors.onSecondaryContainer,
+                            contentColor = OrataTheme.colors.secondaryContainer,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -286,30 +144,30 @@ fun ColorSchemaPreview(
                             .padding(start = 4.dp)
                     ) {
                         ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
+                            text = "Tertiary",
+                            backgroundColor = OrataTheme.colors.tertiary,
+                            contentColor = OrataTheme.colors.onTertiary,
                             modifier = Modifier.weight(1f)
                         )
                         ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
+                            text = "On Tertiary",
+                            backgroundColor = OrataTheme.colors.onTertiary,
+                            contentColor = OrataTheme.colors.tertiary,
                             modifier = Modifier.weight(1f)
                         )
 
                         ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
+                            text = "Tertiary Container",
+                            backgroundColor = OrataTheme.colors.tertiaryContainer,
+                            contentColor = OrataTheme.colors.onTertiaryContainer,
                             modifier = Modifier.weight(1f)
                                 .padding(top = 4.dp)
                         )
 
                         ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
+                            text = "On Tertiary Container",
+                            backgroundColor = OrataTheme.colors.onTertiaryContainer,
+                            contentColor = OrataTheme.colors.tertiaryContainer,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -319,13 +177,39 @@ fun ColorSchemaPreview(
                             .padding(start = 16.dp)
                             .weight(1f)
                     ) {
+                        ColorSchemaItem(
+                            text = "Error",
+                            backgroundColor = OrataTheme.colors.error,
+                            contentColor = OrataTheme.colors.onError,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ColorSchemaItem(
+                            text = "On Error",
+                            backgroundColor = OrataTheme.colors.onError,
+                            contentColor = OrataTheme.colors.error,
+                            modifier = Modifier.weight(1f)
+                        )
 
+                        ColorSchemaItem(
+                            text = "Error Container",
+                            backgroundColor = OrataTheme.colors.errorContainer,
+                            contentColor = OrataTheme.colors.onErrorContainer,
+                            modifier = Modifier.weight(1f)
+                                .padding(top = 4.dp)
+                        )
+
+                        ColorSchemaItem(
+                            text = "On Error Container",
+                            backgroundColor = OrataTheme.colors.onErrorContainer,
+                            contentColor = OrataTheme.colors.errorContainer,
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
 
                 FlowRow(
                     modifier = Modifier.constrainAs(rowSurface) {
-                        top.linkTo(rowFix.bottom, 24.dp)
+                        top.linkTo(rowNormal.bottom, 24.dp)
                         start.linkTo(parent.start, 24.dp)
                         end.linkTo(parent.end, 24.dp)
                         bottom.linkTo(footer.top, 16.dp)
@@ -334,102 +218,100 @@ fun ColorSchemaPreview(
                     }
                 ) {
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(3f)
                             .fillMaxHeight()
                     ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
+                        Row(
+                            modifier = Modifier.weight(2f)
+                        ) {
+                            ColorSchemaItem(
+                                text = "Surface Dim ",
+                                backgroundColor = OrataTheme.colors.surfaceDim,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "Surface",
+                                backgroundColor = OrataTheme.colors.surface,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
 
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
+                            ColorSchemaItem(
+                                text = "Surface Bright",
+                                backgroundColor = OrataTheme.colors.surfaceBright,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.weight(2f)
+                                .padding(top = 4.dp)
+                        ) {
+                            ColorSchemaItem(
+                                text = "Surface Container Lowest",
+                                backgroundColor = OrataTheme.colors.surfaceContainerLowest,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "Surface Container Low",
+                                backgroundColor = OrataTheme.colors.surfaceContainerLow,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            ColorSchemaItem(
+                                text = "Surface Container",
+                                backgroundColor = OrataTheme.colors.surfaceContainer,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "Surface Container High",
+                                backgroundColor = OrataTheme.colors.surfaceContainerHigh,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "Surface Container Highest",
+                                backgroundColor = OrataTheme.colors.surfaceContainerHighest,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+
+                        Row(
                             modifier = Modifier.weight(1f)
                                 .padding(top = 4.dp)
-                        )
+                        ) {
+                            ColorSchemaItem(
+                                text = "On Surface",
+                                backgroundColor = OrataTheme.colors.onSurface,
+                                contentColor = OrataTheme.colors.surface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "On Surface Variant",
+                                backgroundColor = OrataTheme.colors.onSurfaceVariant,
+                                contentColor = OrataTheme.colors.surfaceVariant,
+                                modifier = Modifier.weight(1f)
+                            )
 
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .padding(start = 4.dp)
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .padding(start = 4.dp)
-                    ) {
-                        ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
-                            modifier = Modifier.weight(1f)
-                        )
-                        ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
-                            contentColor = OrataTheme.colors.onPrimaryContainer,
-                            modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
-                        )
-
-                        ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
-                            modifier = Modifier.weight(1f)
-                        )
+                            ColorSchemaItem(
+                                text = "Outline",
+                                backgroundColor = OrataTheme.colors.outline,
+                                contentColor = OrataTheme.colors.surfaceContainerHighest,
+                                modifier = Modifier.weight(1f)
+                            )
+                            ColorSchemaItem(
+                                text = "Outline Variant",
+                                backgroundColor = OrataTheme.colors.outlineVariant,
+                                contentColor = OrataTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
 
                     Column(
@@ -438,31 +320,30 @@ fun ColorSchemaPreview(
                             .weight(1f)
                     ) {
                         ColorSchemaItem(
-                            text = "Primary",
-                            backgroundColor = OrataTheme.colors.primary,
-                            contentColor = OrataTheme.colors.onPrimary,
+                            text = "Inverse Surface",
+                            backgroundColor = OrataTheme.colors.inverseSurface,
+                            contentColor = OrataTheme.colors.inverseOnSurface,
                             modifier = Modifier.weight(1f)
                         )
                         ColorSchemaItem(
-                            text = "On Primary",
-                            backgroundColor = OrataTheme.colors.onPrimary,
-                            contentColor = OrataTheme.colors.primary,
+                            text = "Inverse On Surface",
+                            backgroundColor = OrataTheme.colors.inverseOnSurface,
+                            contentColor = OrataTheme.colors.inverseSurface,
                             modifier = Modifier.weight(1f)
                         )
-
                         ColorSchemaItem(
-                            text = "Primary Container",
-                            backgroundColor = OrataTheme.colors.primaryContainer,
+                            text = "Inverse Primary",
+                            backgroundColor = OrataTheme.colors.inversePrimary,
                             contentColor = OrataTheme.colors.onPrimaryContainer,
                             modifier = Modifier.weight(1f)
-                                .padding(top = 4.dp)
                         )
 
                         ColorSchemaItem(
-                            text = "On Primary Container",
-                            backgroundColor = OrataTheme.colors.onPrimaryContainer,
-                            contentColor = OrataTheme.colors.primaryContainer,
+                            text = "Scrim",
+                            backgroundColor = OrataTheme.colors.scrim,
+                            contentColor = Color.White,
                             modifier = Modifier.weight(1f)
+                                .padding(top = 16.dp)
                         )
                     }
                 }
@@ -486,7 +367,7 @@ fun ColorSchemaItem(
     ) {
         Text(
             text = text,
-            style = OrataTheme.typography.bodySmall(),
+            style = OrataTheme.typography.bodyMedium(),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(3.dp)
