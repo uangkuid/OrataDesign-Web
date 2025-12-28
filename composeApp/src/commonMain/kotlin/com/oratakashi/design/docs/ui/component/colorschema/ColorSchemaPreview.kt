@@ -1,13 +1,10 @@
 package com.oratakashi.design.docs.ui.component.colorschema
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,12 +41,12 @@ fun ColorSchemaPreview(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(800.dp)
+                .height(1000.dp)
         ) {
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize()
             ) {
-                val (rowNormal, rowSurface, footer) = createRefs()
+                val (rowNormal, rowAccent, rowSurface, footer) = createRefs()
 
                 Text(
                     text = "Diagram of all Orata Design color roles, including optional add-on roles for surface colors and fixed accent colors",
@@ -67,7 +64,7 @@ fun ColorSchemaPreview(
                         top.linkTo(parent.top, 24.dp)
                         start.linkTo(parent.start, 24.dp)
                         end.linkTo(parent.end, 24.dp)
-                        bottom.linkTo(rowSurface.top)
+                        bottom.linkTo(rowAccent.top)
                         height = Dimension.fillToConstraints
                         width = Dimension.fillToConstraints
                     }
@@ -208,8 +205,125 @@ fun ColorSchemaPreview(
                 }
 
                 FlowRow(
-                    modifier = Modifier.constrainAs(rowSurface) {
+                    modifier = Modifier.constrainAs(rowAccent) {
                         top.linkTo(rowNormal.bottom, 24.dp)
+                        start.linkTo(parent.start, 24.dp)
+                        end.linkTo(parent.end, 24.dp)
+                        bottom.linkTo(rowSurface.top)
+                        height = Dimension.fillToConstraints
+                        width = Dimension.fillToConstraints
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                            .fillMaxHeight()
+                    ) {
+                        ColorSchemaItem(
+                            text = "Info",
+                            backgroundColor = OrataTheme.colors.info,
+                            contentColor = OrataTheme.colors.onInfo,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ColorSchemaItem(
+                            text = "On Info",
+                            backgroundColor = OrataTheme.colors.onInfo,
+                            contentColor = OrataTheme.colors.info,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        ColorSchemaItem(
+                            text = "Info Container",
+                            backgroundColor = OrataTheme.colors.infoContainer,
+                            contentColor = OrataTheme.colors.onInfoContainer,
+                            modifier = Modifier.weight(1f)
+                                .padding(top = 4.dp)
+                        )
+
+                        ColorSchemaItem(
+                            text = "On Info Container",
+                            backgroundColor = OrataTheme.colors.onInfoContainer,
+                            contentColor = OrataTheme.colors.infoContainer,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                            .padding(start = 4.dp)
+                    ) {
+                        ColorSchemaItem(
+                            text = "Warning",
+                            backgroundColor = OrataTheme.colors.warning,
+                            contentColor = OrataTheme.colors.onWarning,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ColorSchemaItem(
+                            text = "On Warning",
+                            backgroundColor = OrataTheme.colors.onWarning,
+                            contentColor = OrataTheme.colors.warning,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        ColorSchemaItem(
+                            text = "Warning Container",
+                            backgroundColor = OrataTheme.colors.warningContainer,
+                            contentColor = OrataTheme.colors.onWarningContainer,
+                            modifier = Modifier.weight(1f)
+                                .padding(top = 4.dp)
+                        )
+
+                        ColorSchemaItem(
+                            text = "On Warning Container",
+                            backgroundColor = OrataTheme.colors.onWarningContainer,
+                            contentColor = OrataTheme.colors.warningContainer,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                            .padding(start = 4.dp)
+                    ) {
+                        ColorSchemaItem(
+                            text = "Success",
+                            backgroundColor = OrataTheme.colors.success,
+                            contentColor = OrataTheme.colors.onSuccess,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ColorSchemaItem(
+                            text = "On Success",
+                            backgroundColor = OrataTheme.colors.onSuccess,
+                            contentColor = OrataTheme.colors.success,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        ColorSchemaItem(
+                            text = "Success Container",
+                            backgroundColor = OrataTheme.colors.successContainer,
+                            contentColor = OrataTheme.colors.onSuccessContainer,
+                            modifier = Modifier.weight(1f)
+                                .padding(top = 4.dp)
+                        )
+
+                        ColorSchemaItem(
+                            text = "On Success Container",
+                            backgroundColor = OrataTheme.colors.onSuccessContainer,
+                            contentColor = OrataTheme.colors.successContainer,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Box (
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f)
+                    ) {
+                    }
+                }
+
+                FlowRow(
+                    modifier = Modifier.constrainAs(rowSurface) {
+                        top.linkTo(rowAccent.bottom, 24.dp)
                         start.linkTo(parent.start, 24.dp)
                         end.linkTo(parent.end, 24.dp)
                         bottom.linkTo(footer.top, 16.dp)
