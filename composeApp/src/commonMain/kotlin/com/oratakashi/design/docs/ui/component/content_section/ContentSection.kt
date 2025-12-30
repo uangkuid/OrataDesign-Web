@@ -26,7 +26,7 @@ fun ContentSection(
         if (title != null) {
             Text(
                 text = title,
-                style = OrataTheme.typography.headlineSmall(),
+                style = OrataTheme.typography.headlineMedium(),
             )
         }
 

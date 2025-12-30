@@ -318,6 +318,144 @@ fun ColorSystemScreen(
                     }
                 )
             }
+
+            item(
+                key = "secondary"
+            ) {
+                ContentSection(
+                    title = "Secondary",
+                    content = {
+                        Text("Use Secondary roles for components that require visual distinction without drawing as much attention as primary elements. These roles are well suited for less prominent UI components, such as filter chips, supporting actions, or secondary states.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.Secondary,
+                            description = {
+                                Text("Orata Design defines four Secondary color roles:")
+
+                                Text(
+                                    text = "Secondary",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for lower-emphasis fills, text, and icons placed against surface backgrounds. This role supports the primary color without competing for attention.")
+
+                                Text(
+                                    text = "On Secondary",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Applied to text and icons displayed on top of the Secondary color, ensuring adequate contrast and readability.")
+
+                                Text(
+                                    text = "Secondary Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A more subdued fill color used against surface backgrounds, intended for recessive components such as tonal buttons or secondary interactive elements.")
+
+                                Text(
+                                    text = "On Secondary Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for text and icons placed on top of the Secondary Container color, maintaining visual clarity and accessibility.")
+                            }
+                        )
+                    }
+                )
+            }
+
+            item(
+                key = "tertiary"
+            ) {
+                ContentSection(
+                    title = "Tertiary",
+                    content = {
+                        Text("Use Tertiary roles to introduce contrasting accent colors that complement and balance the primary and secondary palettes, or to draw heightened attention to specific UI elements such as input fields or highlighted states.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.Tertiary,
+                            description = {
+                                Text("Orata Design defines four Tertiary color roles:")
+
+                                Text(
+                                    text = "Tertiary",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for complementary fills, text, and icons placed against surface backgrounds. This role adds visual contrast while remaining harmonious with the overall color system.")
+
+                                Text(
+                                    text = "On Tertiary",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Applied to text and icons displayed on top of the Tertiary color, ensuring sufficient contrast and readability.")
+
+                                Text(
+                                    text = "Tertiary Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A complementary container color used against surface backgrounds, ideal for components that require subtle emphasis, such as input fields or highlighted containers.")
+
+                                Text(
+                                    text = "On Tertiary Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for text and icons placed on top of the Tertiary Container color, maintaining clarity, accessibility, and visual consistency.")
+                            }
+                        )
+                    }
+                )
+            }
+
+            item(
+                key = "error"
+            ) {
+                ContentSection(
+                    title = "Error",
+                    content = {
+                        Text("Use Error roles to clearly communicate error and failure states within the interface, such as when an incorrect password is entered into a text field or a validation rule is not met. These roles are designed to draw immediate attention and convey urgency without ambiguity.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.Error,
+                            description = {
+                                Text("Orata Design defines four Error color roles:")
+
+                                Text(
+                                    text = "Error",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("An attention-grabbing color used for fills, icons, and text placed against surface backgrounds. This role signals critical issues that require user awareness or action.")
+
+                                Text(
+                                    text = "On Error",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Applied to text and icons displayed on top of the Error color, ensuring strong contrast and clear legibility.")
+
+                                Text(
+                                    text = "Error Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A prominent fill color used against surface backgrounds to highlight error-related components or regions.")
+
+                                Text(
+                                    text = "On Error Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for text and icons placed on top of the Error Container color, maintaining readability and accessibility.    ")
+                            }
+                        )
+                    }
+                )
+            }
         }
     }
 }
