@@ -117,10 +117,50 @@ Or use the run configuration in your IDE's toolbar.
 .\gradlew.bat :composeApp:run
 ```
 
+## 🚢 Deployment
+
+This project includes automated CI/CD for deploying to GitHub Pages.
+
+### GitHub Pages Deployment
+
+The application is automatically built and deployed to GitHub Pages on every push to the `main` branch.
+
+**Workflow Configuration:**
+- **Base Image**: Ubuntu with Java 17 (Gradle 8.14.3 compatible)
+- **Build Command**: `./gradlew wasmJsBrowserDistribution`
+- **Output Path**: `composeApp/build/dist/wasmJs/productionExecutable`
+- **Root File**: `index.html`
+
+**To enable GitHub Pages deployment:**
+
+1. Go to your repository **Settings** → **Pages**
+2. Under "Build and deployment", select **GitHub Actions** as the source
+3. The workflow will automatically deploy on the next push to `main`
+
+**Manual Deployment:**
+
+You can also trigger a deployment manually:
+1. Go to the **Actions** tab in your repository
+2. Select the **Deploy to GitHub Pages** workflow
+3. Click **Run workflow**
+
+**Local Build for Production:**
+
+To build the production bundle locally:
+
+```bash
+./gradlew wasmJsBrowserDistribution
+```
+
+The output will be available in `composeApp/build/dist/wasmJs/productionExecutable/`
+
 ## 📂 Project Structure
 
 ```
 OrataDesign-Web/
+├── .github/
+│   └── workflows/
+│       └── deploy-github-pages.yml  # GitHub Pages deployment workflow
 ├── composeApp/                    # Main application module
 │   ├── src/
 │   │   ├── androidMain/          # Android-specific code
