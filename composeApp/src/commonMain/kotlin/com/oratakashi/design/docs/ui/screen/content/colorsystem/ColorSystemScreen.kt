@@ -456,6 +456,128 @@ fun ColorSystemScreen(
                     }
                 )
             }
+
+            item(
+                key = "surface"
+            ) {
+                ContentSection(
+                    title = "Surface",
+                    content = {
+                        Text("Use Surface roles to define neutral background layers within the interface, and apply container colors for structural components such as cards, sheets, and dialogs. These roles form the foundation of the visual hierarchy and support content without competing for attention.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.Surface,
+                            description = {
+                                Text("Orata Design defines three core Surface-related roles:")
+
+                                Text(
+                                    text = "Surface",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("The default background color used across the application. It provides a neutral base that allows foreground elements to remain clear and readable.")
+
+                                Text(
+                                    text = "On Surface",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for text and icons displayed on top of any surface or surface container color. This role ensures strong contrast and high readability for primary content.")
+
+                                Text(
+                                    text = "On Surface Variant",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A lower-emphasis color for text and icons placed against any surface or surface container color. This role is ideal for secondary content, metadata, or supporting information.")
+                            }
+                        )
+                    }
+                )
+            }
+
+            item(
+                key = "surface_dim"
+            ) {
+                ContentSection(
+                    content = {
+                        Text("In addition to the base surface roles, Orata Design provides five surface container roles, each defined by its relative level of emphasis. These roles are used to create visual layering, depth, and separation between UI elements while maintaining a cohesive and neutral appearance.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.SurfaceDim,
+                            description = {
+                                Text("The surface container roles are as follows:")
+
+                                Text(
+                                    text = "Surface Container Lowest",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("The default background color used across the application. It provides a neutral base that allows foreground elements to remain clear and readable.")
+
+                                Text(
+                                    text = "Surface Container Low",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for text and icons displayed on top of any surface or surface container color. This role ensures strong contrast and high readability for primary content.")
+
+                                Text(
+                                    text = "Surface Container",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A lower-emphasis color for text and icons placed against any surface or surface container color. This role is ideal for secondary content, metadata, or supporting information.")
+
+                                Text(
+                                    text = "Surface Container High",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A lower-emphasis color for text and icons placed against any surface or surface container color. This role is ideal for secondary content, metadata, or supporting information.")
+
+                                Text(
+                                    text = "Surface Container Highest   ",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A lower-emphasis color for text and icons placed against any surface or surface container color. This role is ideal for secondary content, metadata, or supporting information.")
+                            }
+                        )
+                    }
+                )
+            }
+
+            item(
+                key = "outline"
+            ) {
+                ContentSection(
+                    title = "Outline",
+                    content = {
+                        Text("Orata Design defines two outline color roles intended for use against surface backgrounds. These roles help establish boundaries, separation, and visual structure without overwhelming the interface.")
+
+                        ColorRolesPreview(
+                            roles = ColorRoles.Outline,
+                            description = {
+
+                                Text(
+                                    text = "Outline",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("Used for important and functional boundaries, such as text field outlines, input borders, or other elements where clear separation and affordance are required.")
+
+                                Text(
+                                    text = "Outline Variant",
+                                    style = OrataTheme.typography.titleMedium()
+                                )
+
+                                Text("A lower-emphasis outline color intended for decorative elements, such as dividers, or in cases where other visual elements already provide sufficient contrast (for example, meeting a 4.5:1 contrast ratio).")
+                            }
+                        )
+                    }
+                )
+            }
         }
     }
 }

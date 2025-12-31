@@ -40,7 +40,6 @@ fun ColorRolesPreview(
     description: @Composable ColumnScope.() -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    println("code: ${roles.code}")
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { 2 }
@@ -176,8 +175,8 @@ private fun PreviewContent(
                 ) {
                     Card(
                         colors = CardDefaults.cardColors(
-                            containerColor = OrataTheme.colors.surface,
-                            contentColor = OrataTheme.colors.onSurface
+                            containerColor = if (isSurface(role = role)) OrataTheme.colors.secondaryContainer else OrataTheme.colors.surface,
+                            contentColor = if (isSurface(role = role)) OrataTheme.colors.onSecondary else OrataTheme.colors.onSurface,
                         ),
                         border = BorderStroke(
                             width = 2.dp,
@@ -206,4 +205,8 @@ private fun PreviewContent(
             }
         }
     }
+}
+
+private fun isSurface(role: ColorRoles): Boolean {
+    return role == ColorRoles.Surface || role == ColorRoles.SurfaceDim
 }
