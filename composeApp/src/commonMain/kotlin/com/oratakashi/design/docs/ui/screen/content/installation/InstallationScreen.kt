@@ -8,28 +8,50 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.component.alert.OraInfoAlert
+import com.oratakashi.design.docs.data.model.state.State
+import com.oratakashi.design.docs.domain.model.MavenMetadata
 import com.oratakashi.design.docs.navigation.page.InstallationNavigation
 import com.oratakashi.design.docs.ui.component.code.Code
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.seanproctor.datatable.DataColumn
 import com.seanproctor.datatable.material3.DataTable
-import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxLanguage
-import dev.snipme.highlights.model.SyntaxThemes
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InstallationScreen(
     onBackClick: () -> Unit = {},
-    showBack: Boolean = false
+    showBack: Boolean = false,
+    viewModel: MavenViewModel = koinViewModel()
 ) {
+    println("InstallationScreen: Composing with viewModel=$viewModel")
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val versionState = viewModel.uiState.collectAsState()
+
+    println("InstallationScreen: Current state=${versionState.value}")
+
+    val version = when (val state = versionState.value) {
+        is State.Success<*> -> {
+            val metadata = state.data as? MavenMetadata
+            println("InstallationScreen: Success state with metadata=$metadata")
+            metadata?.versioning?.latest ?: "{latest_version}"
+        }
+        is State.Error -> {
+            println("InstallationScreen: Error state - ${(state as State.Error).message}")
+            "{latest_version}"
+        }
+        is State.Loading -> {
+            println("InstallationScreen: Loading state")
+            "{latest_version}"
+        }
+    }
 
     DetailContent(
         scrollBehavior = scrollBehavior,
@@ -134,7 +156,7 @@ fun InstallationScreen(
 
                         Code(
                             fileName = "build.gradle.kts",
-                            code = "implementation(\"com.oratakashi:design:0.0.1-Alpha\")",
+                            code = "implementation(\"com.oratakashi:design:$version\")",
                             language = SyntaxLanguage.KOTLIN,
                             canExpand = false
                         )

@@ -1,8 +1,8 @@
-package com.oratakashi.design.docs.ui.maven
+package com.oratakashi.design.docs.ui.screen.content.installation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.oratakashi.design.docs.domain.model.MavenMetadata
+import com.oratakashi.design.docs.data.model.state.State
 import com.oratakashi.design.docs.domain.usecase.GetMavenMetadataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +13,8 @@ class MavenViewModel(
     private val getMavenMetadataUseCase: GetMavenMetadataUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MavenUiState>(MavenUiState.Loading)
-    val uiState: StateFlow<MavenUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<State>(State.Loading)
+    val uiState: StateFlow<State> = _uiState.asStateFlow()
 
     init {
         fetchMavenMetadata()
@@ -22,22 +22,18 @@ class MavenViewModel(
 
     fun fetchMavenMetadata() {
         viewModelScope.launch {
-            _uiState.value = MavenUiState.Loading
+            println("MavenViewModel: Starting to fetch maven metadata...")
+            _uiState.value = State.Loading
+
             getMavenMetadataUseCase().fold(
                 onSuccess = { metadata ->
-                    _uiState.value = MavenUiState.Success(metadata)
+                    _uiState.value = State.Success(metadata)
                 },
                 onFailure = { error ->
-                    _uiState.value = MavenUiState.Error(error.message ?: "Unknown error")
+                    error.printStackTrace()
+                    _uiState.value = State.Error(error.message ?: "Unknown error")
                 }
             )
         }
     }
 }
-
-sealed class MavenUiState {
-    data object Loading : MavenUiState()
-    data class Success(val metadata: MavenMetadata) : MavenUiState()
-    data class Error(val message: String) : MavenUiState()
-}
-
