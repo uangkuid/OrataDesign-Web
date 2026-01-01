@@ -17,7 +17,7 @@ import com.oratakashi.design.docs.navigation.MainNavigation
 import com.oratakashi.design.docs.ui.screen.content.ContentScreen
 import com.oratakashi.design.docs.ui.screen.home.HomeScreen
 import com.oratakashi.design.foundation.OrataAppTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun App(
