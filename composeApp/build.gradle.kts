@@ -1,12 +1,11 @@
-// import com.android.build.api.dsl.androidLibrary
+import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    // Commented out for WASM-only builds to avoid dl.google.com access issues
-    // alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
@@ -14,12 +13,11 @@ plugins {
 }
 
 kotlin {
-    // Commented out Android target for WASM-only builds
-    // androidTarget {
-    //     compilerOptions {
-    //         jvmTarget.set(JvmTarget.JVM_11)
-    //     }
-    // }
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
 
     jvm()
     
@@ -30,13 +28,12 @@ kotlin {
     }
     
     sourceSets {
-        // Commented out Android dependencies for WASM-only builds
-        // androidMain.dependencies {
-        //     implementation(compose.preview)
-        //     implementation(libs.androidx.activity.compose)
-        //     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
-        //     implementation("io.insert-koin:koin-android")
-        // }
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            implementation("io.insert-koin:koin-android")
+        }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -80,33 +77,32 @@ kotlin {
     }
 }
 
-// Commented out Android configuration for WASM-only builds
-// android {
-//     namespace = "com.oratakashi.design.docs"
-//     compileSdk = libs.versions.android.compileSdk.get().toInt()
-// 
-//     defaultConfig {
-//         applicationId = "com.oratakashi.design.docs"
-//         minSdk = libs.versions.android.minSdk.get().toInt()
-//         targetSdk = libs.versions.android.targetSdk.get().toInt()
-//         versionCode = 1
-//         versionName = "1.0"
-//     }
-//     packaging {
-//         resources {
-//             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-//         }
-//     }
-//     buildTypes {
-//         getByName("release") {
-//             isMinifyEnabled = false
-//         }
-//     }
-//     compileOptions {
-//         sourceCompatibility = JavaVersion.VERSION_11
-//         targetCompatibility = JavaVersion.VERSION_11
-//     }
-// }
+android {
+    namespace = "com.oratakashi.design.docs"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        applicationId = "com.oratakashi.design.docs"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
 
 compose.desktop {
     application {
@@ -124,8 +120,7 @@ compose.resources {
     generateResClass = always
 }
 
-// Commented out Android-specific debug dependencies for WASM-only builds
-// dependencies {
-//     debugImplementation(compose.uiTooling)
-// }
+dependencies {
+    debugImplementation(compose.uiTooling)
+}
 
