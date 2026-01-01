@@ -14,13 +14,13 @@ class MavenApiServiceImpl(
 ) : MavenApiService {
 
     companion object {
-        private const val BASE_URL = "https://repo1.maven.org/maven2/com/oratakashi/design"
+        private const val BASE_URL = "https://maven.oratakashi.workers.dev/"
     }
 
     override suspend fun getMavenMetadata(): MavenMetadataResponse {
-        println("MavenApiService: Making HTTP request to $BASE_URL/maven-metadata.xml")
+        println("MavenApiService: Making HTTP request to $BASE_URL")
         return try {
-            val response = httpClient.get("$BASE_URL/maven-metadata.xml")
+            val response = httpClient.get(BASE_URL)
             println("MavenApiService: HTTP request successful, status: ${response.status}")
             val body = response.body<MavenMetadataResponse>()
             println("MavenApiService: Response body parsed successfully")
