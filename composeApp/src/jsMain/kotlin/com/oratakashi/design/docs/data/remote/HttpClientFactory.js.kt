@@ -6,6 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.xml.xml
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.serialization.XML
@@ -18,15 +19,15 @@ actual fun createHttpClient(): HttpClient {
     println("HttpClientFactory: Creating JS HttpClient with Js engine")
     return HttpClient(Js) {
         install(ContentNegotiation) {
-            xml(
-                format = XML {
-                    autoPolymorphic = false
-                    indentString = "  "
-                    xmlDeclMode = XmlDeclMode.Auto
-                    // Penting untuk parsing XML yang fleksibel
-                    repairNamespaces = true
-                }
-            )
+            val xmlFormat = XML {
+                autoPolymorphic = false
+                indentString = "  "
+                xmlDeclMode = XmlDeclMode.Auto
+                // Penting untuk parsing XML yang fleksibel
+                repairNamespaces = true
+            }
+            xml(contentType = ContentType.Application.Xml, format = xmlFormat)
+            xml(contentType = ContentType.Text.Xml, format = xmlFormat)
         }
         install(Logging) {
             logger = object : Logger {
@@ -38,4 +39,3 @@ actual fun createHttpClient(): HttpClient {
         }
     }
 }
-
