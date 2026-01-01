@@ -16,6 +16,8 @@ class MavenRepositoryImpl(
             val domainModel = response.toDomainModel()
             Result.success(domainModel)
         } catch (e: Exception) {
+            println("MavenRepository: Error occurred - ${e.message}")
+            e.printStackTrace()
             Result.failure(e)
         }
     }

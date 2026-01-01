@@ -18,10 +18,16 @@ class MavenApiServiceImpl(
     }
 
     override suspend fun getMavenMetadata(): MavenMetadataResponse {
+        println("MavenApiService: Making HTTP request to $BASE_URL/maven-metadata.xml")
         return try {
             val response = httpClient.get("$BASE_URL/maven-metadata.xml")
-            response.body<MavenMetadataResponse>()
+            println("MavenApiService: HTTP request successful, status: ${response.status}")
+            val body = response.body<MavenMetadataResponse>()
+            println("MavenApiService: Response body parsed successfully")
+            body
         } catch (e: Exception) {
+            println("MavenApiService: HTTP request failed - ${e.message}")
+            e.printStackTrace()
             throw e
         }
     }
