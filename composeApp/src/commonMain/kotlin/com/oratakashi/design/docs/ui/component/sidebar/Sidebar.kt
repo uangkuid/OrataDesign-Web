@@ -38,8 +38,8 @@ import androidx.constraintlayout.compose.Dimension
 import com.oratakashi.design.docs.navigation.BaseNavigation
 import com.oratakashi.design.docs.Config
 import com.oratakashi.design.docs.icons.LogoIcon
-import com.oratakashi.design.docs.models.sidebar.SidebarItem
-import com.oratakashi.design.docs.models.sidebar.SidebarSection
+import com.oratakashi.design.docs.data.model.sidebar.SidebarItem
+import com.oratakashi.design.docs.data.model.sidebar.SidebarSection
 import com.oratakashi.design.foundation.OrataTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

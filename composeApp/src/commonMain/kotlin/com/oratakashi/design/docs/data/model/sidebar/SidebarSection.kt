@@ -1,4 +1,4 @@
-package com.oratakashi.design.docs.models.sidebar
+package com.oratakashi.design.docs.data.model.sidebar
 
 data class SidebarSection(
     val title: String,

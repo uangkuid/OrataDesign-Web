@@ -5,6 +5,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import androidx.navigation.ExperimentalBrowserHistoryApi
 import androidx.navigation.bindToBrowserNavigation
+import com.oratakashi.design.docs.di.AppModule
 import com.oratakashi.design.docs.navigation.HomeNavigation
 import com.oratakashi.design.docs.navigation.MainNavigation
 import com.oratakashi.design.docs.ui.App
@@ -12,9 +13,15 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.core.context.startKoin
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalBrowserHistoryApi::class)
 fun main() {
+
+    startKoin {
+        modules(*AppModule.provideModule())
+    }
+
     val body = document.body ?: return
     ComposeViewport(body) {
         // Build a route -> label map from the sidebar configuration so titles are auto-derived

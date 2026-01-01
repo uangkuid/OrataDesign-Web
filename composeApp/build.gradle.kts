@@ -31,6 +31,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            implementation("io.insert-koin:koin-android")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,9 +53,19 @@ kotlin {
             implementation(libs.ui.backhandler)
             implementation(libs.constraintlayout.compose.multiplatform)
             implementation(libs.designsystem)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
-            implementation("com.seanproctor:datatable-material3:0.11.7")
-            implementation("dev.snipme:highlights:1.1.0")
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.datatable.material3)
+            implementation(libs.highlights)
+            implementation(libs.ktor.client.cio)
+            implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
+            implementation("io.ktor:ktor-client-logging:3.3.3")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
+            implementation("io.ktor:ktor-serialization-kotlinx-xml:3.3.3")
+            implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            implementation("io.insert-koin:koin-core")
+            implementation("io.insert-koin:koin-compose")
+            implementation("io.insert-koin:koin-compose-viewmodel")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

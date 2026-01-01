@@ -1,7 +1,7 @@
 package com.oratakashi.design.docs
 
-import com.oratakashi.design.docs.models.sidebar.SidebarItem
-import com.oratakashi.design.docs.models.sidebar.SidebarSection
+import com.oratakashi.design.docs.data.model.sidebar.SidebarItem
+import com.oratakashi.design.docs.data.model.sidebar.SidebarSection
 import com.oratakashi.design.docs.navigation.page.AlertNavigation
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation

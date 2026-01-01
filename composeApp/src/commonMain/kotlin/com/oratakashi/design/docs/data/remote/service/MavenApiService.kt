@@ -1,0 +1,29 @@
+package com.oratakashi.design.docs.data.remote.service
+
+import com.oratakashi.design.docs.data.model.maven.MavenMetadataResponse
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+
+interface MavenApiService {
+    suspend fun getMavenMetadata(): MavenMetadataResponse
+}
+
+class MavenApiServiceImpl(
+    private val httpClient: HttpClient
+) : MavenApiService {
+
+    companion object {
+        private const val BASE_URL = "https://repo1.maven.org/maven2/com/oratakashi/design"
+    }
+
+    override suspend fun getMavenMetadata(): MavenMetadataResponse {
+        return try {
+            val response = httpClient.get("$BASE_URL/maven-metadata.xml")
+            response.body<MavenMetadataResponse>()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+}
+
