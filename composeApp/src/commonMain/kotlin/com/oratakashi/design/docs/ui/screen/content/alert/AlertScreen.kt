@@ -45,6 +45,7 @@ fun AlertScreen(
                         ComponentPreview {
                             OraInfoAlert(
                                 title = "Info",
+                                description = "Lorem Ipsum is simply dummy text",
                             )
                         }
                     }
