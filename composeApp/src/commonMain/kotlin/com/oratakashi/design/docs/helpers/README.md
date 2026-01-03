@@ -4,17 +4,17 @@ Helper functions for clipboard operations across all supported platforms.
 
 ## Overview
 
-The `ClipboardHelpers` module provides a cross-platform API for copying text to the system clipboard. It supports all platforms in this KMP project: Android, JVM (Desktop), wasmJs, and JS.
+The `ClipboardHelpers` object provides a cross-platform API for copying text to the system clipboard. It supports all platforms in this KMP project: Android, JVM (Desktop), wasmJs, and JS.
 
 ## Usage
 
 ### Basic Usage
 
 ```kotlin
-import com.oratakashi.design.docs.helpers.copyToClipboard
+import com.oratakashi.design.docs.helpers.ClipboardHelpers
 
 // Copy text to clipboard
-copyToClipboard("Hello, World!")
+ClipboardHelpers.copyToClipboard("Hello, World!")
 ```
 
 ### Platform-Specific Notes
@@ -23,16 +23,16 @@ copyToClipboard("Hello, World!")
 For Android, you need to initialize the clipboard helper with the application context. This is already done in `MainActivity.kt`:
 
 ```kotlin
-import com.oratakashi.design.docs.helpers.initClipboard
+import com.oratakashi.design.docs.helpers.ClipboardHelpers
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         // Initialize clipboard helper
-        initClipboard(this)
+        ClipboardHelpers.initClipboard(this)
         
-        // Now you can use copyToClipboard() anywhere in your app
+        // Now you can use ClipboardHelpers.copyToClipboard() anywhere in your app
     }
 }
 ```
@@ -41,14 +41,14 @@ class MainActivity : ComponentActivity() {
 No initialization required. The clipboard helper uses Java AWT Toolkit:
 
 ```kotlin
-copyToClipboard("Desktop clipboard text")
+ClipboardHelpers.copyToClipboard("Desktop clipboard text")
 ```
 
 #### Web (wasmJs and JS)
 No initialization required. The clipboard helper uses the Web Clipboard API with a fallback for older browsers:
 
 ```kotlin
-copyToClipboard("Web clipboard text")
+ClipboardHelpers.copyToClipboard("Web clipboard text")
 ```
 
 ## Example in Compose
@@ -57,7 +57,7 @@ copyToClipboard("Web clipboard text")
 @Composable
 fun CopyButton() {
     Button(onClick = {
-        copyToClipboard("Text to copy")
+        ClipboardHelpers.copyToClipboard("Text to copy")
     }) {
         Text("Copy to Clipboard")
     }

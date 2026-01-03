@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.oratakashi.design.docs.helpers.initClipboard
+import com.oratakashi.design.docs.helpers.ClipboardHelpers
 import com.oratakashi.design.docs.ui.App
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         // Initialize clipboard helper with application context
-        initClipboard(this)
+        ClipboardHelpers.initClipboard(this)
 
         setContent {
             App()

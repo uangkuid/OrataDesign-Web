@@ -5,9 +5,10 @@ package com.oratakashi.design.docs.helpers
  * @author oratakashi
  * @since 03 Jan 2026
  */
-
-/**
- * Copies the given text to the system clipboard
- * @param text The string to be copied to the clipboard
- */
-expect fun copyToClipboard(text: String)
+expect object ClipboardHelpers {
+    /**
+     * Copies the given text to the system clipboard
+     * @param text The string to be copied to the clipboard
+     */
+    fun copyToClipboard(text: String)
+}

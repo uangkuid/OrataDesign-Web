@@ -9,17 +9,18 @@ import java.awt.datatransfer.StringSelection
  * @author oratakashi
  * @since 03 Jan 2026
  */
-
-/**
- * Copies the given text to the system clipboard
- * @param text The string to be copied to the clipboard
- */
-actual fun copyToClipboard(text: String) {
-    try {
-        val clipboard = Toolkit.getDefaultToolkit().systemClipboard
-        val stringSelection = StringSelection(text)
-        clipboard.setContents(stringSelection, null)
-    } catch (e: Exception) {
-        println("ClipboardHelpers: Failed to copy to clipboard - ${e.message}")
+actual object ClipboardHelpers {
+    /**
+     * Copies the given text to the system clipboard
+     * @param text The string to be copied to the clipboard
+     */
+    actual fun copyToClipboard(text: String) {
+        try {
+            val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+            val stringSelection = StringSelection(text)
+            clipboard.setContents(stringSelection, null)
+        } catch (e: Exception) {
+            println("ClipboardHelpers: Failed to copy to clipboard - ${e.message}")
+        }
     }
 }
