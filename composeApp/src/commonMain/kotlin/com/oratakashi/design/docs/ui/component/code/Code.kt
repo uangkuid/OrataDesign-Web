@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.oratakashi.design.component.button.OraButtonSize
 import com.oratakashi.design.component.button.OraTransparentButton
 import com.oratakashi.design.foundation.OrataTheme
+import com.oratakashi.design.docs.helpers.ClipboardHelpers
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Copy
 import dev.snipme.highlights.Highlights
@@ -90,7 +91,7 @@ fun Code(
 
                 OraTransparentButton(
                     onClick = {
-
+                        ClipboardHelpers.copyToClipboard(code.trimIndent())
                     },
                     size = OraButtonSize.XSmall,
                     label = "Copy",
