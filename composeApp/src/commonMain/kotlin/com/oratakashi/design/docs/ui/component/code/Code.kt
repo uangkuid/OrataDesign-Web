@@ -91,7 +91,7 @@ fun Code(
 
                 OraTransparentButton(
                     onClick = {
-                        ClipboardHelpers.copyToClipboard(code)
+                        ClipboardHelpers.copyToClipboard(code.trimIndent())
                     },
                     size = OraButtonSize.XSmall,
                     label = "Copy",
