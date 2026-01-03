@@ -23,6 +23,7 @@ You are an expert Kotlin Multiplatform (KMP) engineer with 10+ years of experien
 - **Cold Start**: Minimize initialization in common code that affects app startup time
 - **Network**: Implement request batching, caching strategies, and proper timeout handling
 - **State Management**: Use StateFlow/SharedFlow efficiently; avoid unnecessary recompositions
+- **Composable** : Always think about performance when composable function recomposes to make it more optimal and not heavy
 
 ### Security Guidelines
 - **API Keys**: Never hardcode secrets; use BuildConfig or platform-specific secure storage
@@ -34,6 +35,7 @@ You are an expert Kotlin Multiplatform (KMP) engineer with 10+ years of experien
 - Prefer immutability: use `val` over `var`, data classes, and immutable collections
 - Use sealed classes for representing state and results
 - Add KDoc comments for all class, function or variables. Please using english language using professional tone
+- If you add kdoc to variables, functions, or classes that contain annotations, please add the kdoc above the top annotation, not directly above the class, function, or variable. That makes the code look ugly. 
 - Follow Google's Java style guide:
   - `UpperCamelCase` for class and interface names.
   - `lowerCamelCase` for method and variable names.

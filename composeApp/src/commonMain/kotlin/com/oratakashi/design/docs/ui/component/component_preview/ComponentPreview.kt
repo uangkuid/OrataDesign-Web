@@ -26,15 +26,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
+import com.oratakashi.design.docs.ui.component.component_preview.platform.WebsitePlatform
 import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
 import com.oratakashi.design.foundation.OrataTheme
 
+/**
+ * ComponentPreview is a composable function that provides a preview container for UI components with device and theme switching capabilities.
+ * This function is designed for documentation and design system purposes, allowing users to preview components in different platforms and color modes.
+ *
+ * @author oratakashi
+ * @since 03 Jan 2026
+ * @param modifier Modifier for styling the preview container. Default is Modifier.
+ * @param content Composable lambda that defines the UI component to be previewed.
+ */
 @Composable
 fun ComponentPreview(
     modifier : Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     var deviceType by remember { mutableStateOf(PreviewPlatform.Website.name) }
+    var isDark by remember { mutableStateOf(true) }
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { PreviewPlatform.entries.size }
@@ -90,7 +101,7 @@ fun ComponentPreview(
                             tabs = listOf("Dark Mode", "Light Mode"),
                             selectedTab = "Dark Mode",
                             onTabSelected = {
-
+                                isDark = it == "Dark Mode"
                             }
                         )
                     }
@@ -99,10 +110,13 @@ fun ComponentPreview(
 
                     HorizontalPager(
                         state = pagerState,
+                        userScrollEnabled = false,
                         modifier = Modifier.fillMaxWidth()
-                            .defaultMinSize(minHeight = 512.dp)
                     ) {
-                        content.invoke()
+                        WebsitePlatform(
+                            isDark = isDark,
+                            content = content
+                        )
                     }
 
                     HorizontalDivider()
