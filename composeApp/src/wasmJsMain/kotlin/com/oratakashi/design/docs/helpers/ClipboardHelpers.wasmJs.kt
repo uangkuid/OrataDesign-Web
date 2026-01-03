@@ -27,14 +27,21 @@ actual fun copyToClipboard(text: String) {
                 }
         } else {
             // Fallback: Create a temporary textarea element
+            // Note: execCommand is deprecated but used as fallback for older browsers
+            console.warn("Using deprecated execCommand as fallback for clipboard operation")
             val textarea = kotlinx.browser.document.createElement("textarea")
             textarea.asDynamic().value = text
             textarea.asDynamic().style.position = "fixed"
             textarea.asDynamic().style.opacity = "0"
             kotlinx.browser.document.body?.appendChild(textarea)
             textarea.asDynamic().select()
-            kotlinx.browser.document.asDynamic().execCommand("copy")
+            val success = kotlinx.browser.document.asDynamic().execCommand("copy") as Boolean
             kotlinx.browser.document.body?.removeChild(textarea)
+            if (success) {
+                console.log("Text copied to clipboard using fallback method")
+            } else {
+                console.error("Failed to copy text to clipboard using fallback method")
+            }
         }
     } catch (e: Throwable) {
         println("ClipboardHelpers: Failed to copy to clipboard - ${e.message}")
