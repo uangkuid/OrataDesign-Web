@@ -3,8 +3,13 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
-        maven("https://maven.google.com")
-        google()
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -12,18 +17,14 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        // Add Maven Central first to try resolving androidx artifacts
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
-        // Add JetBrains Space Maven repository
-        maven {
-            url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        }
-        // Try direct Maven URL
-        maven {
-            url = uri("https://maven.google.com")
-            isAllowInsecureProtocol = false
-        }
-        google()
     }
 }
 

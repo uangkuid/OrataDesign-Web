@@ -1,6 +1,8 @@
 package com.oratakashi.design.docs.helpers
 
+import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.HTMLTextAreaElement
 
 /**
  * WasmJs implementation for copying text to clipboard
@@ -15,36 +17,61 @@ actual object ClipboardHelpers {
      */
     actual fun copyToClipboard(text: String) {
         try {
-            // Use the Clipboard API if available
-            if (js("typeof navigator !== 'undefined' && navigator.clipboard") as Boolean) {
-                // Using writeText method from Clipboard API (returns a Promise)
-                window.navigator.asDynamic().clipboard.writeText(text)
-                    .then { 
-                        console.log("Text copied to clipboard successfully")
-                    }
-                    .catch { error: dynamic ->
-                        console.error("Failed to copy text to clipboard: ", error)
-                    }
+            // Use the modern Clipboard API if available
+            val navigator = window.navigator
+            if (hasClipboardAPI()) {
+                writeToClipboard(text)
             } else {
                 // Fallback: Create a temporary textarea element
                 // Note: execCommand is deprecated but used as fallback for older browsers
-                console.warn("Using deprecated execCommand as fallback for clipboard operation")
-                val textarea = kotlinx.browser.document.createElement("textarea")
-                textarea.asDynamic().value = text
-                textarea.asDynamic().style.position = "fixed"
-                textarea.asDynamic().style.opacity = "0"
-                kotlinx.browser.document.body?.appendChild(textarea)
-                textarea.asDynamic().select()
-                val success = kotlinx.browser.document.asDynamic().execCommand("copy") as Boolean
-                kotlinx.browser.document.body?.removeChild(textarea)
-                if (success) {
-                    console.log("Text copied to clipboard using fallback method")
-                } else {
-                    console.error("Failed to copy text to clipboard using fallback method")
-                }
+                copyUsingExecCommand(text)
             }
         } catch (e: Throwable) {
             println("ClipboardHelpers: Failed to copy to clipboard - ${e.message}")
+        }
+    }
+    
+    /**
+     * Check if Clipboard API is available
+     */
+    private fun hasClipboardAPI(): Boolean {
+        return js("typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function'")
+    }
+    
+    /**
+     * Write text to clipboard using Clipboard API
+     */
+    private fun writeToClipboard(text: String) {
+        js("""
+            navigator.clipboard.writeText(text)
+                .then(function() {
+                    console.log('Text copied to clipboard successfully');
+                })
+                .catch(function(error) {
+                    console.error('Failed to copy text to clipboard: ', error);
+                });
+        """)
+    }
+    
+    /**
+     * Fallback method using deprecated execCommand
+     */
+    private fun copyUsingExecCommand(text: String) {
+        val textarea = document.createElement("textarea") as HTMLTextAreaElement
+        textarea.value = text
+        textarea.style.position = "fixed"
+        textarea.style.opacity = "0"
+        document.body?.appendChild(textarea)
+        textarea.select()
+        
+        val success = js("document.execCommand('copy')") as Boolean
+        
+        document.body?.removeChild(textarea)
+        
+        if (success) {
+            println("Text copied to clipboard using fallback method")
+        } else {
+            println("Failed to copy text to clipboard using fallback method")
         }
     }
 }
