@@ -17,8 +17,14 @@ actual fun copyToClipboard(text: String) {
     try {
         // Use the Clipboard API if available
         if (js("typeof navigator !== 'undefined' && navigator.clipboard") as Boolean) {
-            // Using writeText method from Clipboard API
+            // Using writeText method from Clipboard API (returns a Promise)
             window.navigator.asDynamic().clipboard.writeText(text)
+                .then { 
+                    console.log("Text copied to clipboard successfully")
+                }
+                .catch { error: dynamic ->
+                    console.error("Failed to copy text to clipboard: ", error)
+                }
         } else {
             // Fallback: Create a temporary textarea element
             val textarea = kotlinx.browser.document.createElement("textarea")
