@@ -46,7 +46,7 @@ fun WebsitePlatform(
     isDark: Boolean = false,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .defaultMinSize(minHeight = 700.dp),
+        .defaultMinSize(minHeight = 800.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
     OrataAppTheme(

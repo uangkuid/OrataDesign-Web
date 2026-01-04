@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
+import com.oratakashi.design.docs.ui.component.component_preview.platform.AndroidPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.WebsitePlatform
 import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
@@ -46,7 +48,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ComponentPreview(
     modifier : Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var deviceType by remember { mutableStateOf(PreviewPlatform.Website.name) }
@@ -124,12 +126,22 @@ fun ComponentPreview(
                         when(it) {
                             PreviewPlatform.Website.ordinal -> WebsitePlatform(
                                 isDark = isDark,
-                                content = { content.invoke() }
+                                content = content
+                            )
+
+                            PreviewPlatform.Desktop.ordinal -> DesktopPlatform(
+                                isDark = isDark,
+                                content = content
+                            )
+
+                            PreviewPlatform.Android.ordinal -> AndroidPlatform(
+                                isDark = isDark,
+                                content = content
                             )
 
                             else -> DesktopPlatform(
                                 isDark = isDark,
-                                content = { content.invoke() }
+                                content = content
                             )
 
                         }

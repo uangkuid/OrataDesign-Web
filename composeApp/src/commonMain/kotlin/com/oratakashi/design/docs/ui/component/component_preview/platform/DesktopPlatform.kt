@@ -46,7 +46,7 @@ fun DesktopPlatform(
     isDark: Boolean = false,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .defaultMinSize(minHeight = 700.dp),
+        .defaultMinSize(minHeight = 800.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
     OrataAppTheme(
@@ -58,7 +58,6 @@ fun DesktopPlatform(
                 .clip(RoundedCornerShape(16.dp))
                 .background(OrataTheme.colors.secondaryContainer)
         ) {
-            val isWideScreen = maxWidth > 1150.dp
             val isAddressBarVisible = maxWidth > 500.dp
 
             Card(
