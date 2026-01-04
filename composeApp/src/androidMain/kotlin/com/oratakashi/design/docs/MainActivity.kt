@@ -13,9 +13,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        
-        // Initialize clipboard helper with application context
-        ClipboardHelpers.initClipboard(this)
 
         setContent {
             App()

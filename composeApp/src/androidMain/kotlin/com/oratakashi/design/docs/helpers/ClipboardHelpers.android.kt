@@ -3,6 +3,8 @@ package com.oratakashi.design.docs.helpers
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Android implementation for copying text to clipboard
@@ -10,18 +12,9 @@ import android.content.Context
  * @author oratakashi
  * @since 03 Jan 2026
  */
-actual object ClipboardHelpers {
+actual object ClipboardHelpers : KoinComponent {
     
-    private var applicationContext: Context? = null
-
-    /**
-     * Initialize the clipboard helper with application context
-     * Should be called once from the Application or MainActivity
-     * @param context Android application context
-     */
-    fun initClipboard(context: Context) {
-        applicationContext = context.applicationContext
-    }
+    private val applicationContext: Context? by inject()
 
     /**
      * Copies the given text to the system clipboard

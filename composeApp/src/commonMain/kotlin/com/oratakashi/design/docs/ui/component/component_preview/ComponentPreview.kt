@@ -2,6 +2,7 @@ package com.oratakashi.design.docs.ui.component.component_preview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -21,14 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
+import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.WebsitePlatform
 import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
 import com.oratakashi.design.foundation.OrataTheme
+import kotlinx.coroutines.launch
 
 /**
  * ComponentPreview is a composable function that provides a preview container for UI components with device and theme switching capabilities.
@@ -44,6 +48,7 @@ fun ComponentPreview(
     modifier : Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
     var deviceType by remember { mutableStateOf(PreviewPlatform.Website.name) }
     var isDark by remember { mutableStateOf(true) }
     val pagerState = rememberPagerState(
@@ -82,6 +87,9 @@ fun ComponentPreview(
                                 selectedTab = deviceType,
                                 onTabSelected = {
                                     deviceType = it
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(PreviewPlatform.valueOf(it).ordinal)
+                                    }
                                 }
                             )
                         }
@@ -113,10 +121,18 @@ fun ComponentPreview(
                         userScrollEnabled = false,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        WebsitePlatform(
-                            isDark = isDark,
-                            content = content
-                        )
+                        when(it) {
+                            PreviewPlatform.Website.ordinal -> WebsitePlatform(
+                                isDark = isDark,
+                                content = { content.invoke() }
+                            )
+
+                            else -> DesktopPlatform(
+                                isDark = isDark,
+                                content = { content.invoke() }
+                            )
+
+                        }
                     }
 
                     HorizontalDivider()

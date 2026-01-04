@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -20,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -45,7 +47,7 @@ fun WebsitePlatform(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .defaultMinSize(minHeight = 700.dp),
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     OrataAppTheme(
         darkTheme = isDark
@@ -58,8 +60,6 @@ fun WebsitePlatform(
         ) {
             val isWideScreen = maxWidth > 1150.dp
             val isAddressBarVisible = maxWidth > 500.dp
-
-            println("maxWidth: $maxWidth")
 
             Card(
                 colors = CardDefaults.cardColors(
@@ -80,12 +80,14 @@ fun WebsitePlatform(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
+                            .background(OrataTheme.colors.surfaceContainerLow)
                             .fillMaxWidth()
                             .defaultMinSize(minHeight = 60.dp)
                             .padding(
                                 start = 16.dp,
                                 end = 16.dp,
-                                top = 12.dp
+                                top = 12.dp,
+                                bottom = 12.dp
                             )
                     ) {
                         // macOS-style window controls
@@ -96,7 +98,7 @@ fun WebsitePlatform(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .background(OrataTheme.colors.surfaceContainer)
+                                    .background(OrataTheme.colors.surfaceContainerHigh)
                             ) {
                                 IconButton(
                                     onClick = {},
@@ -148,7 +150,7 @@ fun WebsitePlatform(
                                     .fillMaxWidth()
                                     .clip(CircleShape)
                                     .height(46.dp)
-                                    .background(OrataTheme.colors.surfaceContainer)
+                                    .background(OrataTheme.colors.surfaceContainerHigh)
                                     .padding(horizontal = 16.dp)
                             ) {
                                 Text(
@@ -178,7 +180,7 @@ fun WebsitePlatform(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .background(OrataTheme.colors.surfaceContainer)
+                                    .background(OrataTheme.colors.surfaceContainerHigh)
                             ) {
                                 IconButton(
                                     onClick = {},
@@ -211,9 +213,13 @@ fun WebsitePlatform(
                         }
                     }
 
-                    // Content
-                    Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)) {
-                        content.invoke()
+                    Surface(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            content = content
+                        )
                     }
                 }
             }
