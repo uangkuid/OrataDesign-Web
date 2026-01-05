@@ -2,6 +2,7 @@ package com.oratakashi.design.docs.ui.component.component_preview.platform
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.oratakashi.design.docs.helpers.DateHelpers
 import com.oratakashi.design.foundation.OrataAppTheme
 import com.oratakashi.design.foundation.OrataTheme
@@ -32,9 +38,15 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.BarChart
 import compose.icons.feathericons.BatteryCharging
 import compose.icons.feathericons.Wifi
+import oratadesign_web.composeapp.generated.resources.Res
+import oratadesign_web.composeapp.generated.resources.compose_multiplatform
+import oratadesign_web.composeapp.generated.resources.ic_ios_battery
+import oratadesign_web.composeapp.generated.resources.ic_ios_mobile_signal
+import oratadesign_web.composeapp.generated.resources.ic_ios_wifi
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun AndroidPlatform(
+fun IosPlatform(
     isDark: Boolean = false,
     modifier: Modifier = Modifier
         .fillMaxWidth()
@@ -64,6 +76,7 @@ fun AndroidPlatform(
                 elevation = CardDefaults.elevatedCardElevation(
                     defaultElevation = 12.dp
                 ),
+                shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth(
                         when {
@@ -82,7 +95,7 @@ fun AndroidPlatform(
                         .padding(12.dp)
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = 700.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(OrataTheme.colors.surface),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -92,42 +105,67 @@ fun AndroidPlatform(
                         Column(
                             modifier = Modifier.defaultMinSize(minHeight = 700.dp)
                         ) {
-                            Row(
+                            ConstraintLayout(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        top = 8.dp,
-                                        bottom = 16.dp
-                                    )
                             ) {
-                                Text(
-                                    text = DateHelpers.getTime(),
-                                    style = OrataTheme.typography.labelLarge()
+                                val (tvTime, containerSystem, dynamicIsland) = createRefs()
+
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .background(Color.Black)
+                                        .constrainAs(dynamicIsland) {
+                                            top.linkTo(parent.top, 8.dp)
+                                            start.linkTo(parent.start)
+                                            end.linkTo(parent.end)
+
+                                            width = Dimension.value(120.dp)
+                                            height = Dimension.value(35.dp)
+                                        }
                                 )
 
-                                Spacer(
-                                    modifier = Modifier.weight(1f)
+                                Text(
+                                    text = DateHelpers.getTime(),
+                                    style = OrataTheme.typography.labelLarge(),
+                                    modifier = Modifier.constrainAs(tvTime) {
+                                        top.linkTo(dynamicIsland.top)
+                                        bottom.linkTo(dynamicIsland.bottom)
+                                        start.linkTo(parent.start, 16.dp)
+                                        end.linkTo(dynamicIsland.start, 8.dp)
+
+                                        width = Dimension.fillToConstraints
+                                        height = Dimension.wrapContent
+                                    }
                                 )
 
                                 Row(
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.End),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.constrainAs(containerSystem) {
+                                        top.linkTo(dynamicIsland.top)
+                                        bottom.linkTo(dynamicIsland.bottom)
+                                        end.linkTo(parent.end, 16.dp)
+                                        start.linkTo(dynamicIsland.end, 8.dp)
+
+                                        width = Dimension.fillToConstraints
+                                        height = Dimension.wrapContent
+                                    }
                                 ) {
                                     Icon(
-                                        imageVector = FeatherIcons.Wifi,
+                                        imageVector = vectorResource(Res.drawable.ic_ios_mobile_signal),
                                         contentDescription = null,
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Icon(
-                                        imageVector = FeatherIcons.BarChart,
+                                        imageVector = vectorResource(Res.drawable.ic_ios_wifi),
                                         contentDescription = null,
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Icon(
-                                        imageVector = FeatherIcons.BatteryCharging,
+                                        imageVector = vectorResource(Res.drawable.ic_ios_battery),
                                         contentDescription = null,
-                                        modifier = Modifier.size(18.dp)
+                                        modifier = Modifier.size(28.dp)
                                     )
                                 }
                             }
@@ -142,10 +180,12 @@ fun AndroidPlatform(
 
                             HorizontalDivider(
                                 modifier = Modifier
-                                    .fillMaxWidth(0.3f)
+                                    .fillMaxWidth(0.4f)
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(bottom = 8.dp),
-                                thickness = 4.dp
+                                    .padding(bottom = 8.dp)
+                                    .clip(RoundedCornerShape(16.dp)),
+                                thickness = 6.dp,
+                                color = OrataTheme.colors.onSurface
                             )
                         }
                     }
