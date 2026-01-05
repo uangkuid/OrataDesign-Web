@@ -17,7 +17,7 @@ actual object UrlHelpers {
     actual fun openUrl(url: String) {
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(URI(url))
+                Desktop.getDesktop().browse(URI.create(url))
             } else {
                 println("UrlHelpers: Desktop browsing is not supported on this platform")
             }

@@ -22,7 +22,7 @@ actual object UrlHelpers : KoinComponent {
      */
     actual fun openUrl(url: String) {
         val context = applicationContext ?: run {
-            println("UrlHelpers: Context not initialized.")
+            println("UrlHelpers: Context not initialized. Ensure Koin is properly configured with androidContext().")
             return
         }
         
