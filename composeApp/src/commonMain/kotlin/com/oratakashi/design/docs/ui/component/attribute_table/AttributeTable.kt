@@ -109,7 +109,7 @@ fun AttributeTable(
                             Box(
                                 modifier = Modifier
                                     .padding(vertical = 8.dp)
-                                    .width(200.dp)
+                                    .width(300.dp)
                             ) {
                                 it.control()
                             }
