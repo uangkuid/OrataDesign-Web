@@ -2,17 +2,29 @@ package com.oratakashi.design.docs.ui.screen.content.alert
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.component.alert.OraInfoAlert
+import com.oratakashi.design.component.textfield.OraTextField
+import com.oratakashi.design.component.textfield.OraTextFieldState
 import com.oratakashi.design.docs.navigation.page.AlertNavigation
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
+import com.oratakashi.design.docs.ui.templates.alert.Alert
+import com.oratakashi.design.docs.ui.templates.alert.AlertConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,6 +33,94 @@ fun AlertScreen(
     showBack: Boolean = false
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    var alertData by remember { mutableStateOf(
+        AlertConfig(
+            title = "Information",
+            description = "Lorem ipsum dolor sit amet",
+            isVisible = true,
+            includeAction = true,
+            includeOnClose = true
+        )
+    ) }
+
+    val data: List<AttributeData> = listOf(
+        AttributeData(
+            name = "name",
+            description = "The title text of the alert",
+            required = true,
+            defaultValue = "-",
+            control = {
+                OraTextField(
+                    value = alertData.title,
+                    onValueChange = {
+                        alertData = alertData.copy(title = it)
+                    },
+                    state = if (alertData.title.isEmpty()) {
+                        OraTextFieldState.Error("This field is required")
+                    } else {
+                        OraTextFieldState.Default()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        ),
+        AttributeData(
+            name = "description",
+            description = "The description text of the alert",
+            required = false,
+            defaultValue = "-",
+            control = {
+                OraTextField(
+                    value = alertData.description,
+                    onValueChange = { alertData = alertData.copy(description = it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    placeholder = "Input description here"
+                )
+            }
+        ),
+        AttributeData(
+            name = "visible",
+            description = "Controls the visibility of the alert with fade animation",
+            required = false,
+            defaultValue = "null",
+            control = {
+            }
+        ),
+        AttributeData(
+            name = "showCloseIcon",
+            description = "Whether to show the close icon",
+            required = false,
+            defaultValue = "null",
+            control = {
+            }
+        ),
+        AttributeData(
+            name = "onClose",
+            description = "Callback Whether to show the close icon",
+            required = false,
+            defaultValue = "null",
+            control = {
+            }
+        ),
+        AttributeData(
+            name = "action",
+            description = "The optional action composable to be displayed",
+            required = false,
+            defaultValue = "null",
+            control = {
+            }
+        ),
+        AttributeData(
+            name = "icon",
+            description = "The optional icon to be displayed, defaults to info icon",
+            required = false,
+            defaultValue = "null",
+            control = {
+            }
+        )
+    )
     DetailContent(
         scrollBehavior = scrollBehavior,
         onBackClick = onBackClick,
@@ -43,11 +143,21 @@ fun AlertScreen(
                         Text("Alerts are typically used to communicate important information, request user confirmation, or present time-sensitive choices. By appearing as an overlay on top of the current interface, the Alert component captures user attention while maintaining continuity with the underlying content.")
 
                         ComponentPreview {
-                            OraInfoAlert(
-                                title = "Info",
-                                description = "Lorem Ipsum is simply dummy text",
-                            )
+                            Alert(alertData)
                         }
+                    }
+                )
+            }
+
+            item(
+                key = "attributes"
+            ) {
+                ContentSection(
+                    title = "Attributes",
+                    content = {
+                        AttributeTable(
+                            data = data
+                        )
                     }
                 )
             }

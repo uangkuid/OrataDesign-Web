@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
 import com.oratakashi.design.docs.ui.component.component_preview.platform.AndroidPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
+import com.oratakashi.design.docs.ui.component.component_preview.platform.IosPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.WebsitePlatform
 import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
 import com.oratakashi.design.foundation.OrataTheme
@@ -139,7 +140,7 @@ fun ComponentPreview(
                                 content = content
                             )
 
-                            else -> DesktopPlatform(
+                            else -> IosPlatform(
                                 isDark = isDark,
                                 content = content
                             )
