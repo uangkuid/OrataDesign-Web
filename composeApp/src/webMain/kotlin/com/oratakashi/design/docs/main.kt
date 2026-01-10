@@ -1,5 +1,7 @@
 package com.oratakashi.design.docs
 
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
@@ -15,7 +17,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalBrowserHistoryApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalBrowserHistoryApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 fun main() {
 
     startKoin {
@@ -52,16 +56,17 @@ fun main() {
 
         App(
             hasDeeplink = initSlug.isNotEmpty(),
-            onNavHostReady = { navController ->
+            onNavHostReady = { navController, navigator ->
                 coroutineScope.launch {
                     if (initSlug.isNotEmpty()) {
                         val targetRoute = slugToRoute[initSlug]
                         println("initSlug: $initSlug - $targetRoute")
                         if (targetRoute != null) {
                             println("Try to naviagate: $initSlug -> $targetRoute")
-                            navController.navigate(targetRoute) {
-                                launchSingleTop = true
-                            }
+//                            navController.navigate(targetRoute) {
+//                                launchSingleTop = true
+//                            }
+                            navigator.navigateTo(ThreePaneScaffoldRole.Primary, targetRoute)
                         }
                     }
                 }
