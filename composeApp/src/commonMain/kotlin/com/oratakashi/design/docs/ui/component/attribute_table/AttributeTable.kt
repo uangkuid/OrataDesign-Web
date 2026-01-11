@@ -42,7 +42,7 @@ fun AttributeTable(
             },
             DataColumn {
                 Text(
-                    text = "Default",
+                    text = "Type",
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                 )
@@ -91,7 +91,7 @@ fun AttributeTable(
 
                     cell {
                         Text(
-                            text = it.defaultValue ?: "",
+                            text = it.type ?: "",
                             modifier = Modifier
                                 .padding(vertical = 8.dp)
                         )

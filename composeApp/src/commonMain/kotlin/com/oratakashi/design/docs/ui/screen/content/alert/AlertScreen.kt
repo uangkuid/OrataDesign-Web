@@ -22,6 +22,7 @@ import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
+import com.oratakashi.design.docs.ui.component.switches.Switch
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.alert.Alert
 import com.oratakashi.design.docs.ui.templates.alert.AlertConfig
@@ -40,7 +41,8 @@ fun AlertScreen(
             description = "Lorem ipsum dolor sit amet",
             isVisible = true,
             includeAction = true,
-            includeOnClose = true
+            includeOnClose = true,
+            includeIcon = true
         )
     ) }
 
@@ -49,7 +51,7 @@ fun AlertScreen(
             name = "name",
             description = "The title text of the alert",
             required = true,
-            defaultValue = "-",
+            type =  "string",
             control = {
                 OraTextField(
                     value = alertData.title,
@@ -69,7 +71,7 @@ fun AlertScreen(
             name = "description",
             description = "The description text of the alert",
             required = false,
-            defaultValue = "-",
+            type =  "string",
             control = {
                 OraTextField(
                     value = alertData.description,
@@ -84,23 +86,35 @@ fun AlertScreen(
             name = "visible",
             description = "Controls the visibility of the alert with fade animation",
             required = false,
-            defaultValue = "null",
+            type =  "boolean",
             control = {
+                Switch(
+                    checked = alertData.isVisible,
+                    onCheckedChange = {
+                        alertData = alertData.copy(isVisible = it)
+                    }
+                )
             }
         ),
         AttributeData(
             name = "showCloseIcon",
             description = "Whether to show the close icon",
             required = false,
-            defaultValue = "null",
+            type =  "boolean",
             control = {
+                Switch(
+                    checked = alertData.includeOnClose,
+                    onCheckedChange = {
+                        alertData = alertData.copy(includeOnClose = it)
+                    }
+                )
             }
         ),
         AttributeData(
             name = "onClose",
             description = "Callback Whether to show the close icon",
             required = false,
-            defaultValue = "null",
+            type =  "Lambda Function",
             control = {
             }
         ),
@@ -108,16 +122,28 @@ fun AlertScreen(
             name = "action",
             description = "The optional action composable to be displayed",
             required = false,
-            defaultValue = "null",
+            type =  "Composable Function",
             control = {
+                Switch(
+                    checked = alertData.includeAction,
+                    onCheckedChange = {
+                        alertData = alertData.copy(includeAction = it)
+                    }
+                )
             }
         ),
         AttributeData(
             name = "icon",
             description = "The optional icon to be displayed, defaults to info icon",
             required = false,
-            defaultValue = "null",
+            type =  "Composable Function",
             control = {
+                Switch(
+                    checked = alertData.includeIcon,
+                    onCheckedChange = {
+                        alertData = alertData.copy(includeIcon = it)
+                    }
+                )
             }
         )
     )
@@ -143,7 +169,9 @@ fun AlertScreen(
                         Text("Alerts are typically used to communicate important information, request user confirmation, or present time-sensitive choices. By appearing as an overlay on top of the current interface, the Alert component captures user attention while maintaining continuity with the underlying content.")
 
                         ComponentPreview {
-                            Alert(alertData)
+                            Alert(alertData) {
+                                alertData = alertData.copy(isVisible = false)
+                            }
                         }
                     }
                 )

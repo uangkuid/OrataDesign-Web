@@ -5,5 +5,6 @@ data class AlertConfig(
     val description: String,
     val isVisible: Boolean,
     val includeOnClose: Boolean,
-    val includeAction: Boolean
+    val includeAction: Boolean,
+    val includeIcon: Boolean
 )
