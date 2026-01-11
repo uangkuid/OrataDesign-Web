@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +35,15 @@ import com.oratakashi.design.component.button.OraTransparentButton
 import com.oratakashi.design.foundation.OrataTheme
 import com.oratakashi.design.docs.helpers.ClipboardHelpers
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.Check
 import compose.icons.feathericons.Copy
 import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxLanguage
 import dev.snipme.highlights.model.SyntaxThemes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun Code(
@@ -56,7 +62,9 @@ fun Code(
             .build()
     }
     var expanded by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     val minCollapsedHeight = 120.dp
+    var copyIcon by remember { mutableStateOf(FeatherIcons.Copy) }
 
     Card(
         modifier = Modifier
@@ -91,12 +99,23 @@ fun Code(
 
                 OraTransparentButton(
                     onClick = {
-                        ClipboardHelpers.copyToClipboard(code.trimIndent())
+                        coroutineScope.launch {
+                            withContext(Dispatchers.Main) {
+                                copyIcon = FeatherIcons.Check
+                            }
+                            ClipboardHelpers.copyToClipboard(code.trimIndent())
+
+                            delay(2000)
+
+                            withContext(Dispatchers.Main) {
+                                copyIcon = FeatherIcons.Copy
+                            }
+                        }
                     },
                     size = OraButtonSize.XSmall,
                     label = "Copy",
                     iconLeft = {
-                        Icon(imageVector = FeatherIcons.Copy, null)
+                        Icon(imageVector = copyIcon, null)
                     }
                 )
             }

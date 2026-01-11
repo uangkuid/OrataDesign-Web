@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ContentScreen(
-    onNavHostReady: suspend (NavController) -> Unit = {},
+    onNavHostReady: suspend (NavController, ThreePaneScaffoldNavigator<String?>) -> Unit = { _, _ ->},
     modifier: Modifier = Modifier
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
@@ -67,7 +67,7 @@ fun ContentScreen(
     var currentRoute by remember { mutableStateOf(navController.currentDestination?.route) }
 
     LaunchedEffect(navController) {
-        onNavHostReady(navController)
+        onNavHostReady(navController, navigator)
     }
 
     coroutineScope.launch {
