@@ -2,17 +2,14 @@ package com.oratakashi.design.docs.ui.component.component_preview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
@@ -53,17 +50,30 @@ fun ComponentPreview(
 ) {
     val coroutineScope = rememberCoroutineScope()
     var deviceType by remember { mutableStateOf(PreviewPlatform.Website.name) }
+    var previewState by remember { mutableStateOf(PreviewState.Preview.name) }
     var isDark by remember { mutableStateOf(true) }
-    val pagerState = rememberPagerState(
+    val previewPagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { PreviewPlatform.entries.size }
     )
+     val mainPagerState = rememberPagerState(
+         initialPage = 0,
+         pageCount = { PreviewState.entries.size }
+     )
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        PreviewTabs()
+        PreviewTabs(
+            selectedTab = previewState,
+            onTabSelected = {
+                previewState = it
+                coroutineScope.launch {
+                    mainPagerState.animateScrollToPage(PreviewState.valueOf(it).ordinal)
+                }
+            }
+        )
 
         Card(
             colors = CardDefaults.cardColors(
@@ -75,87 +85,101 @@ fun ComponentPreview(
                 color = OrataTheme.colors.outline
             ),
         ) {
-            BoxWithConstraints {
-                val isPlatformVisible = maxWidth > 700.dp
+            HorizontalPager(
+                state = mainPagerState
+            ) {
+                when(it) {
+                    PreviewState.Preview.ordinal -> {
+                        BoxWithConstraints {
+                            val isPlatformVisible = maxWidth > 700.dp
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier
-                        .padding(24.dp)
-                ) {
-                    Row {
-                        AnimatedVisibility(isPlatformVisible) {
-                            PreviewTabs(
-                                PreviewPlatform.entries.map { it.name },
-                                selectedTab = deviceType,
-                                onTabSelected = {
-                                    deviceType = it
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(PreviewPlatform.valueOf(it).ordinal)
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier
+                                    .padding(24.dp)
+                            ) {
+                                Row {
+                                    AnimatedVisibility(isPlatformVisible) {
+                                        PreviewTabs(
+                                            PreviewPlatform.entries.map { it.name },
+                                            selectedTab = deviceType,
+                                            onTabSelected = {
+                                                deviceType = it
+                                                coroutineScope.launch {
+                                                    previewPagerState.animateScrollToPage(PreviewPlatform.valueOf(it).ordinal)
+                                                }
+                                            }
+                                        )
+                                    }
+
+                                    AnimatedVisibility(
+                                        visible = isPlatformVisible,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                    ) {
+                                        Spacer(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        )
+                                    }
+
+                                    PreviewTabs(
+                                        tabs = listOf("Dark Mode", "Light Mode"),
+                                        selectedTab = "Dark Mode",
+                                        onTabSelected = {
+                                            isDark = it == "Dark Mode"
+                                        }
+                                    )
+                                }
+
+                                HorizontalDivider()
+
+                                HorizontalPager(
+                                    state = previewPagerState,
+                                    userScrollEnabled = false,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    when(it) {
+                                        PreviewPlatform.Website.ordinal -> WebsitePlatform(
+                                            isDark = isDark,
+                                            content = content
+                                        )
+
+                                        PreviewPlatform.Desktop.ordinal -> DesktopPlatform(
+                                            isDark = isDark,
+                                            content = content
+                                        )
+
+                                        PreviewPlatform.Android.ordinal -> AndroidPlatform(
+                                            isDark = isDark,
+                                            content = content
+                                        )
+
+                                        else -> IosPlatform(
+                                            isDark = isDark,
+                                            content = content
+                                        )
+
                                     }
                                 }
-                            )
-                        }
 
-                        AnimatedVisibility(
-                            visible = isPlatformVisible,
-                            modifier = Modifier
-                                .weight(1f)
-                        ) {
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            )
-                        }
+                                HorizontalDivider()
 
-                        PreviewTabs(
-                            tabs = listOf("Dark Mode", "Light Mode"),
-                            selectedTab = "Dark Mode",
-                            onTabSelected = {
-                                isDark = it == "Dark Mode"
+                                Text(
+                                    text = "© ${DateHelpers.getYear()} Orata Design System",
+                                    style = OrataTheme.typography.labelMedium(),
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
-                        )
-                    }
-
-                    HorizontalDivider()
-
-                    HorizontalPager(
-                        state = pagerState,
-                        userScrollEnabled = false,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        when(it) {
-                            PreviewPlatform.Website.ordinal -> WebsitePlatform(
-                                isDark = isDark,
-                                content = content
-                            )
-
-                            PreviewPlatform.Desktop.ordinal -> DesktopPlatform(
-                                isDark = isDark,
-                                content = content
-                            )
-
-                            PreviewPlatform.Android.ordinal -> AndroidPlatform(
-                                isDark = isDark,
-                                content = content
-                            )
-
-                            else -> IosPlatform(
-                                isDark = isDark,
-                                content = content
-                            )
-
                         }
                     }
 
-                    HorizontalDivider()
+                    PreviewState.Code.ordinal -> {
+                        BoxWithConstraints {
 
-                    Text(
-                        text = "© ${DateHelpers.getYear()} Orata Design System",
-                        style = OrataTheme.typography.labelMedium(),
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                        }
+                    }
                 }
             }
         }

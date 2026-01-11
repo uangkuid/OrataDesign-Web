@@ -50,13 +50,14 @@ fun Code(
     fileName: String = "",
     code: String = "",
     language: SyntaxLanguage = SyntaxLanguage.DEFAULT,
+    darkMode: Boolean = true,
     canExpand: Boolean = true
 ) {
-    val highlights = remember(code, language) {
+    val highlights = remember(code, language, darkMode) {
         Highlights
             .Builder(
                 code = code.trimIndent(),
-                theme = SyntaxThemes.pastel(darkMode = true),
+                theme = SyntaxThemes.pastel(darkMode = darkMode),
                 language = language
             )
             .build()
