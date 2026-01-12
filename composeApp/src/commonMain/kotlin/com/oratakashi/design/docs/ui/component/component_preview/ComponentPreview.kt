@@ -2,20 +2,31 @@ package com.oratakashi.design.docs.ui.component.component_preview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDragHandle
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
+import com.oratakashi.design.docs.helpers.NavigationHelpers
 import com.oratakashi.design.docs.ui.component.component_preview.platform.AndroidPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.IosPlatform
@@ -43,6 +55,7 @@ import kotlinx.coroutines.launch
  * @param modifier Modifier for styling the preview container. Default is Modifier.
  * @param content Composable lambda that defines the UI component to be previewed.
  */
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ComponentPreview(
     modifier : Modifier = Modifier,
@@ -60,6 +73,7 @@ fun ComponentPreview(
          initialPage = 0,
          pageCount = { PreviewState.entries.size }
      )
+    val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
 
     Column(
         modifier = modifier,
@@ -177,7 +191,36 @@ fun ComponentPreview(
 
                     PreviewState.Code.ordinal -> {
                         BoxWithConstraints {
+                            val maxHeight = minOf(maxHeight, 800.dp)
+                            ListDetailPaneScaffold(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(maxHeight),
+                                directive = navigator.scaffoldDirective,
+                                value = navigator.scaffoldValue,
+                                paneExpansionState = rememberPaneExpansionState(navigator.scaffoldValue),
+                                paneExpansionDragHandle = { state ->
+                                    val interactionSource =
+                                        remember { MutableInteractionSource() }
+                                    VerticalDragHandle(
+                                        modifier =
+                                            Modifier.paneExpansionDraggable(
+                                                state,
+                                                LocalMinimumInteractiveComponentSize.current,
+                                                interactionSource
+                                            ), interactionSource = interactionSource
+                                    )
+                                },
+                                listPane = {
+                                    AnimatedPane {
+                                        val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
+                                    }
+                                },
+                                detailPane = {
+                                    AnimatedPane {
 
+                                    }
+                                }
+                            )
                         }
                     }
                 }
