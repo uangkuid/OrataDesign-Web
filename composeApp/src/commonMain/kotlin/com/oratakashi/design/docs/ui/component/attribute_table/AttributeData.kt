@@ -20,6 +20,6 @@ data class AttributeData(
     val name: String,
     val description: String,
     val required: Boolean,
-    val defaultValue: String? = null,
+    val type: String? = null,
     val control: @Composable () -> Unit
 )
