@@ -163,7 +163,7 @@ OrataDesign-Web/
 │       └── deploy-github-pages.yml  # GitHub Pages deployment workflow
 ├── composeApp/                    # Main application module
 │   ├── scripts/
-│   │   └── generateManifest.py   # Auto-generates template manifest
+│   │   └── generateManifest.js   # Auto-generates template manifest
 │   ├── src/
 │   │   ├── androidMain/          # Android-specific code
 │   │   ├── commonMain/           # Shared code across all platforms
@@ -201,29 +201,35 @@ OrataDesign-Web/
 The project includes an automated system that generates a `manifest.json` file listing all template files:
 
 **How it works:**
-- A Python script (`composeApp/scripts/generateManifest.py`) scans the `templates` directory
-- It creates a JSON file listing all files within each template subdirectory
+- A Node.js script (`composeApp/scripts/generateManifest.js`) scans the `templates` directory
+- It creates a JSON array with objects containing template names and their files
 - The Gradle task `generateTemplateManifest` automatically runs before any build or run command
 - The manifest.json is auto-generated and should not be committed to git
 
 **Example manifest output:**
 ```json
-{
-  "alert": [
-    "Alert.kt",
-    "AlertConfig.kt"
-  ],
-  "snackbar": [
-    "main.kt",
-    "config.yaml"
-  ]
-}
+[
+  {
+    "name": "alert",
+    "content": [
+      "Alert.kt",
+      "AlertConfig.kt"
+    ]
+  },
+  {
+    "name": "snackbar",
+    "content": [
+      "config.yaml",
+      "main.kt"
+    ]
+  }
+]
 ```
 
 **To manually regenerate the manifest:**
 ```bash
 # From the composeApp directory
-python3 scripts/generateManifest.py
+node scripts/generateManifest.js
 
 # Or using Gradle
 ./gradlew :composeApp:generateTemplateManifest

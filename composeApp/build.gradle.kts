@@ -126,7 +126,7 @@ dependencies {
 
 /**
  * Task to generate manifest.json for templates directory.
- * This task executes a Python script that scans all subdirectories in the templates folder
+ * This task executes a Node.js script that scans all subdirectories in the templates folder
  * and creates a JSON manifest listing all files within each subdirectory.
  * 
  * @author oratakashi
@@ -137,15 +137,7 @@ tasks.register<Exec>("generateTemplateManifest") {
     group = "build"
     
     workingDir = projectDir
-    
-    // Detect available Python executable for cross-platform compatibility
-    val pythonCmd = when {
-        System.getProperty("os.name").lowercase().contains("win") -> 
-            listOf("py", "-3", "scripts/generateManifest.py")
-        else -> 
-            listOf("python3", "scripts/generateManifest.py")
-    }
-    commandLine(pythonCmd)
+    commandLine("node", "scripts/generateManifest.js")
     
     val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
     val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
