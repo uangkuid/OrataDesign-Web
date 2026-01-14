@@ -1,7 +1,11 @@
 package com.oratakashi.design.docs.ui.component.component_preview
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,10 +20,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -34,15 +40,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.helpers.DateHelpers
 import com.oratakashi.design.docs.helpers.NavigationHelpers
+import com.oratakashi.design.docs.ui.component.component_preview.code_editor.CodeSidebar
 import com.oratakashi.design.docs.ui.component.component_preview.platform.AndroidPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.IosPlatform
+import com.oratakashi.design.docs.ui.component.component_preview.platform.MacOSWindowControls
 import com.oratakashi.design.docs.ui.component.component_preview.platform.WebsitePlatform
 import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
+import com.oratakashi.design.foundation.OrataAppTheme
 import com.oratakashi.design.foundation.OrataTheme
 import kotlinx.coroutines.launch
 
@@ -84,7 +94,7 @@ fun ComponentPreview(
             onTabSelected = {
                 previewState = it
                 coroutineScope.launch {
-                    mainPagerState.animateScrollToPage(PreviewState.valueOf(it).ordinal)
+                    mainPagerState.scrollToPage(PreviewState.valueOf(it).ordinal)
                 }
             }
         )
@@ -100,7 +110,14 @@ fun ComponentPreview(
             ),
         ) {
             HorizontalPager(
-                state = mainPagerState
+                state = mainPagerState,
+                modifier = Modifier
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
             ) {
                 when(it) {
                     PreviewState.Preview.ordinal -> {
@@ -190,37 +207,66 @@ fun ComponentPreview(
                     }
 
                     PreviewState.Code.ordinal -> {
-                        BoxWithConstraints {
-                            val maxHeight = minOf(maxHeight, 800.dp)
-                            ListDetailPaneScaffold(
-                                modifier = Modifier.fillMaxWidth()
-                                    .height(maxHeight),
-                                directive = navigator.scaffoldDirective,
-                                value = navigator.scaffoldValue,
-                                paneExpansionState = rememberPaneExpansionState(navigator.scaffoldValue),
-                                paneExpansionDragHandle = { state ->
-                                    val interactionSource =
-                                        remember { MutableInteractionSource() }
-                                    VerticalDragHandle(
-                                        modifier =
-                                            Modifier.paneExpansionDraggable(
-                                                state,
-                                                LocalMinimumInteractiveComponentSize.current,
-                                                interactionSource
-                                            ), interactionSource = interactionSource
-                                    )
-                                },
-                                listPane = {
-                                    AnimatedPane {
-                                        val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
-                                    }
-                                },
-                                detailPane = {
-                                    AnimatedPane {
+                        OrataAppTheme(
+                            darkTheme = isDark
+                        ) {
+                            BoxWithConstraints {
+                                val maxHeight = minOf(maxHeight, 800.dp)
+                                ListDetailPaneScaffold(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .height(maxHeight),
+                                    directive = navigator.scaffoldDirective,
+                                    value = navigator.scaffoldValue,
+                                    paneExpansionState = rememberPaneExpansionState(navigator.scaffoldValue),
+                                    paneExpansionDragHandle = { state ->
+                                        val interactionSource =
+                                            remember { MutableInteractionSource() }
+                                        VerticalDragHandle(
+                                            modifier =
+                                                Modifier.paneExpansionDraggable(
+                                                    state,
+                                                    LocalMinimumInteractiveComponentSize.current,
+                                                    interactionSource
+                                                ), interactionSource = interactionSource
+                                        )
+                                    },
+                                    listPane = {
+                                        AnimatedPane {
+                                            val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
 
+                                            Column(
+                                                modifier = Modifier
+                                                    .padding(
+                                                        top = 16.dp,
+                                                        bottom = 16.dp,
+                                                        start = 16.dp
+                                                    )
+                                                    .clip(RoundedCornerShape(16.dp))
+                                                    .background(OrataTheme.colors.surfaceContainer)
+                                            ) {
+                                                MacOSWindowControls(
+                                                    modifier = Modifier
+                                                        .padding(
+                                                            vertical = 16.dp,
+                                                            horizontal = 16.dp
+                                                        )
+                                                )
+
+                                                CodeSidebar(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .weight(1f)
+                                                )
+                                            }
+                                        }
+                                    },
+                                    detailPane = {
+                                        AnimatedPane {
+
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
