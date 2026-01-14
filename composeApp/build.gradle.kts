@@ -124,3 +124,49 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+/**
+ * Task to generate manifest.json for templates directory.
+ * This task executes a Node.js script that scans all subdirectories in the templates folder
+ * and creates a JSON manifest listing all files within each subdirectory.
+ * 
+ * @author oratakashi
+ * @since 14 Jan 2026
+ */
+tasks.register<Exec>("generateTemplateManifest") {
+    description = "Generates manifest.json for templates directory"
+    group = "build"
+    
+    workingDir = projectDir
+    commandLine("node", "scripts/generateManifest.js")
+    
+    val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
+    val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
+    
+    inputs.dir(templatesDir)
+    outputs.file(outputFile)
+}
+
+// Make generateTemplateManifest run before compose resource generation
+tasks.matching { 
+    it.name == "generateComposeResClass" || 
+    it.name.endsWith("GenerateComposeResClass")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before JVM run tasks
+tasks.matching { 
+    it.name == "run" || 
+    it.name == "jvmRun"
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before Wasm/JS browser run tasks
+tasks.matching {
+    it.name.contains("wasmJs") && it.name.contains("Run")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+
