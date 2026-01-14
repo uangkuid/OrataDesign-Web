@@ -154,6 +154,13 @@ tasks.matching {
     dependsOn("generateTemplateManifest")
 }
 
+// Add dependency for resource copying tasks
+tasks.matching {
+    it.name.contains("copyNonXmlValueResources")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
 // Run before JVM run tasks
 tasks.matching { 
     it.name == "run" || 
