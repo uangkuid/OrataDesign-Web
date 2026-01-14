@@ -29,22 +29,22 @@ const manifest = [];
 
 // Iterate through subdirectories
 if (fs.existsSync(templatesDir)) {
-  const items = fs.readdirSync(templatesDir).sort();
+  const items = fs.readdirSync(templatesDir, { withFileTypes: true })
+    .filter(item => item.isDirectory())
+    .map(item => item.name)
+    .sort();
   
-  for (const item of items) {
-    const itemPath = path.join(templatesDir, item);
-    const stat = fs.statSync(itemPath);
+  for (const itemName of items) {
+    const itemPath = path.join(templatesDir, itemName);
+    const files = fs.readdirSync(itemPath, { withFileTypes: true })
+      .filter(f => f.isFile())
+      .map(f => f.name)
+      .sort();
     
-    if (stat.isDirectory()) {
-      const files = fs.readdirSync(itemPath)
-        .filter(f => fs.statSync(path.join(itemPath, f)).isFile())
-        .sort();
-      
-      manifest.push({
-        name: item,
-        content: files
-      });
-    }
+    manifest.push({
+      name: itemName,
+      content: files
+    });
   }
 }
 
