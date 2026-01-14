@@ -124,3 +124,47 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+/**
+ * Task to generate manifest.json for templates directory.
+ * This task executes a Python script that scans all subdirectories in the templates folder
+ * and creates a JSON manifest listing all files within each subdirectory.
+ * 
+ * @author oratakashi
+ * @since 14 Jan 2026
+ */
+tasks.register<Exec>("generateTemplateManifest") {
+    description = "Generates manifest.json for templates directory"
+    group = "build"
+    
+    workingDir = projectDir
+    commandLine("python3", "scripts/generateManifest.py")
+    
+    val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
+    val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
+    
+    inputs.dir(templatesDir)
+    outputs.file(outputFile)
+}
+
+// Make generateTemplateManifest run before processing resources
+tasks.matching { it.name.contains("processResources") }.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Also run before common resource generation tasks
+tasks.matching { it.name.contains("generateComposeResClass") }.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before any build or assemble task
+tasks.matching { it.name == "build" || it.name.contains("assemble") || it.name.contains("Assemble") }.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before any run task
+tasks.matching { it.name.startsWith("run") || it.name.endsWith("Run") }.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+
+
