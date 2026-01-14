@@ -8,7 +8,6 @@ listing all files within each subdirectory.
 @since 14 Jan 2026
 """
 
-import os
 import json
 from pathlib import Path
 

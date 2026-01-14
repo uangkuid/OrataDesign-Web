@@ -137,7 +137,15 @@ tasks.register<Exec>("generateTemplateManifest") {
     group = "build"
     
     workingDir = projectDir
-    commandLine("python3", "scripts/generateManifest.py")
+    
+    // Detect available Python executable for cross-platform compatibility
+    val pythonCmd = when {
+        System.getProperty("os.name").lowercase().contains("win") -> 
+            listOf("py", "-3", "scripts/generateManifest.py")
+        else -> 
+            listOf("python3", "scripts/generateManifest.py")
+    }
+    commandLine(pythonCmd)
     
     val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
     val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
@@ -146,23 +154,26 @@ tasks.register<Exec>("generateTemplateManifest") {
     outputs.file(outputFile)
 }
 
-// Make generateTemplateManifest run before processing resources
-tasks.matching { it.name.contains("processResources") }.configureEach {
+// Make generateTemplateManifest run before compose resource generation
+tasks.matching { 
+    it.name == "generateComposeResClass" || 
+    it.name.endsWith("GenerateComposeResClass")
+}.configureEach {
     dependsOn("generateTemplateManifest")
 }
 
-// Also run before common resource generation tasks
-tasks.matching { it.name.contains("generateComposeResClass") }.configureEach {
+// Run before JVM run tasks
+tasks.matching { 
+    it.name == "run" || 
+    it.name == "jvmRun"
+}.configureEach {
     dependsOn("generateTemplateManifest")
 }
 
-// Run before any build or assemble task
-tasks.matching { it.name == "build" || it.name.contains("assemble") || it.name.contains("Assemble") }.configureEach {
-    dependsOn("generateTemplateManifest")
-}
-
-// Run before any run task
-tasks.matching { it.name.startsWith("run") || it.name.endsWith("Run") }.configureEach {
+// Run before Wasm/JS browser run tasks
+tasks.matching {
+    it.name.contains("wasmJs") && it.name.contains("Run")
+}.configureEach {
     dependsOn("generateTemplateManifest")
 }
 
