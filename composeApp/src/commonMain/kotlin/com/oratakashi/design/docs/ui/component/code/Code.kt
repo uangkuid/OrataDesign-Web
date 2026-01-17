@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -51,7 +53,9 @@ fun Code(
     code: String = "",
     language: SyntaxLanguage = SyntaxLanguage.DEFAULT,
     darkMode: Boolean = true,
-    canExpand: Boolean = true
+    canExpand: Boolean = true,
+    canScrolled: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     val highlights = remember(code, language, darkMode) {
         Highlights
@@ -64,11 +68,12 @@ fun Code(
     }
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
     val minCollapsedHeight = 120.dp
     var copyIcon by remember { mutableStateOf(FeatherIcons.Copy) }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .animateContentSize(
                 animationSpec = spring(
@@ -138,6 +143,13 @@ fun Code(
                                 Modifier.heightIn(max = minCollapsedHeight)
                             } else {
                                 Modifier.wrapContentHeight()
+                            }
+                        )
+                        .then(
+                            if (canScrolled) {
+                                Modifier.verticalScroll(scrollState)
+                            } else {
+                                Modifier
                             }
                         )
                         .padding(16.dp)

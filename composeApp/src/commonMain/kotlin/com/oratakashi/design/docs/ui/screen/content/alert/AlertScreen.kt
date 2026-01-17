@@ -168,7 +168,9 @@ fun AlertScreen(
 
                         Text("Alerts are typically used to communicate important information, request user confirmation, or present time-sensitive choices. By appearing as an overlay on top of the current interface, the Alert component captures user attention while maintaining continuity with the underlying content.")
 
-                        ComponentPreview {
+                        ComponentPreview(
+                            navigation = AlertNavigation
+                        ) {
                             Alert(alertData) {
                                 alertData = alertData.copy(isVisible = false)
                             }

@@ -20,4 +20,5 @@ node_modules/
 
 # Generated manifest file
 composeApp/src/commonMain/composeResources/files/template/manifest.json
+composeApp/src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates/manifest.json
 

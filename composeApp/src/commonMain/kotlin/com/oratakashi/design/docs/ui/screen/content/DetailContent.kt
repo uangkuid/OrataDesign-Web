@@ -48,8 +48,6 @@ internal fun <T : BaseNavigation> DetailContent(
                 title = {
                     Text(
                         navigation?.title
-                            ?.replace("com.oratakashi.design.docs.navigation.", "")
-                            ?.replace("Navigation", "")
                             ?.replace("List", "").orEmpty(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,

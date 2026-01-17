@@ -8,13 +8,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,15 +23,17 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDragHandle
+import androidx.compose.material3.VerticalDragHandleDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +43,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.oratakashi.design.docs.data.model.code_sidebar.TemplateContent
+import com.oratakashi.design.docs.data.model.code_sidebar.TemplateManifest
 import com.oratakashi.design.docs.helpers.DateHelpers
 import com.oratakashi.design.docs.helpers.NavigationHelpers
+import com.oratakashi.design.docs.navigation.BaseNavigation
+import com.oratakashi.design.docs.ui.component.code.Code
 import com.oratakashi.design.docs.ui.component.component_preview.code_editor.CodeSidebar
 import com.oratakashi.design.docs.ui.component.component_preview.platform.AndroidPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.platform.DesktopPlatform
@@ -55,6 +59,8 @@ import com.oratakashi.design.docs.ui.component.tabs.PreviewTabs
 import com.oratakashi.design.foundation.OrataAppTheme
 import com.oratakashi.design.foundation.OrataTheme
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import oratadesign_web.composeapp.generated.resources.Res
 
 /**
  * ComponentPreview is a composable function that provides a preview container for UI components with device and theme switching capabilities.
@@ -67,11 +73,16 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ComponentPreview(
-    modifier : Modifier = Modifier,
+fun <T : BaseNavigation> ComponentPreview(
+    navigation: T?,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
+
+    /**
+     * State handling
+     */
     var deviceType by remember { mutableStateOf(PreviewPlatform.Website.name) }
     var previewState by remember { mutableStateOf(PreviewState.Preview.name) }
     var isDark by remember { mutableStateOf(true) }
@@ -79,11 +90,35 @@ fun ComponentPreview(
         initialPage = 0,
         pageCount = { PreviewPlatform.entries.size }
     )
-     val mainPagerState = rememberPagerState(
-         initialPage = 0,
-         pageCount = { PreviewState.entries.size }
-     )
+    val mainPagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { PreviewState.entries.size }
+    )
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
+
+    /**
+     * Prepare file list manifest state
+     */
+    var bytesFileManifest by remember {
+        mutableStateOf(ByteArray(0))
+    }
+    var templateManifest by remember {
+        mutableStateOf<List<TemplateManifest>>(emptyList())
+    }
+
+    LaunchedEffect(navigation) {
+        bytesFileManifest = Res.readBytes("files/templates/manifest.json")
+        if (bytesFileManifest.isNotEmpty()) {
+            try {
+                val jsonString = bytesFileManifest.decodeToString()
+                templateManifest = Json.decodeFromString<List<TemplateManifest>>(jsonString)
+                println(templateManifest)
+            } catch (e: Exception) {
+                println("Error parsing manifest: ${e.message}")
+                templateManifest = emptyList()
+            }
+        }
+    }
 
     Column(
         modifier = modifier,
@@ -119,7 +154,7 @@ fun ComponentPreview(
                         )
                     )
             ) {
-                when(it) {
+                when (it) {
                     PreviewState.Preview.ordinal -> {
                         BoxWithConstraints {
                             val isPlatformVisible = maxWidth > 700.dp
@@ -137,7 +172,9 @@ fun ComponentPreview(
                                             onTabSelected = {
                                                 deviceType = it
                                                 coroutineScope.launch {
-                                                    previewPagerState.animateScrollToPage(PreviewPlatform.valueOf(it).ordinal)
+                                                    previewPagerState.animateScrollToPage(
+                                                        PreviewPlatform.valueOf(it).ordinal
+                                                    )
                                                 }
                                             }
                                         )
@@ -170,7 +207,7 @@ fun ComponentPreview(
                                     userScrollEnabled = false,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    when(it) {
+                                    when (it) {
                                         PreviewPlatform.Website.ordinal -> WebsitePlatform(
                                             isDark = isDark,
                                             content = content
@@ -207,10 +244,21 @@ fun ComponentPreview(
                     }
 
                     PreviewState.Code.ordinal -> {
+                        val fileList = remember(templateManifest) {
+                            templateManifest
+                                .firstOrNull { it.name == navigation?.title?.lowercase() }
+                                ?.content ?: emptyList()
+                        }
+                        var selectedSidebar : TemplateContent? by remember(fileList) {
+                            mutableStateOf(null)
+                        }
                         OrataAppTheme(
                             darkTheme = isDark
                         ) {
-                            BoxWithConstraints {
+                            BoxWithConstraints(
+                                modifier = Modifier
+                                    .background(OrataTheme.colors.surface)
+                            ) {
                                 val maxHeight = minOf(maxHeight, 800.dp)
                                 ListDetailPaneScaffold(
                                     modifier = Modifier.fillMaxWidth()
@@ -222,6 +270,11 @@ fun ComponentPreview(
                                         val interactionSource =
                                             remember { MutableInteractionSource() }
                                         VerticalDragHandle(
+                                            colors = VerticalDragHandleDefaults.colors(
+                                                color = OrataTheme.colors.surfaceContainer,
+                                                pressedColor = OrataTheme.colors.surfaceContainerLow,
+                                                draggedColor = OrataTheme.colors.surfaceContainerHigh
+                                            ),
                                             modifier =
                                                 Modifier.paneExpansionDraggable(
                                                     state,
@@ -232,17 +285,12 @@ fun ComponentPreview(
                                     },
                                     listPane = {
                                         AnimatedPane {
-                                            val initialState = NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
+                                            val initialState =
+                                                NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
 
                                             Column(
                                                 modifier = Modifier
-                                                    .padding(
-                                                        top = 16.dp,
-                                                        bottom = 16.dp,
-                                                        start = 16.dp
-                                                    )
                                                     .clip(RoundedCornerShape(16.dp))
-                                                    .background(OrataTheme.colors.surfaceContainer)
                                             ) {
                                                 MacOSWindowControls(
                                                     modifier = Modifier
@@ -253,6 +301,17 @@ fun ComponentPreview(
                                                 )
 
                                                 CodeSidebar(
+                                                    selected = selectedSidebar,
+                                                    onSidebarClick = {
+                                                        selectedSidebar = it
+                                                        coroutineScope.launch {
+                                                            navigator.navigateTo(
+                                                                ThreePaneScaffoldRole.Primary,
+                                                                it.filepath
+                                                            )
+                                                        }
+                                                    },
+                                                    fileList = fileList,
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .weight(1f)
@@ -262,7 +321,39 @@ fun ComponentPreview(
                                     },
                                     detailPane = {
                                         AnimatedPane {
+                                            val showBack =
+                                                !NavigationHelpers.isListDetailPaneOpened(navigator.scaffoldValue)
+                                            val currentRoute =
+                                                navigator.currentDestination?.contentKey
 
+                                            LaunchedEffect(showBack) {
+                                                if (showBack) return@LaunchedEffect
+                                                selectedSidebar = fileList.firstOrNull()
+                                                navigator.navigateTo(ThreePaneScaffoldRole.Primary, selectedSidebar?.filepath)
+                                            }
+
+                                            if (!currentRoute.isNullOrEmpty()) {
+                                                var bytesCode by remember {
+                                                    mutableStateOf(ByteArray(0))
+                                                }
+                                                val selectedFile: TemplateContent? by remember(currentRoute) {
+                                                    mutableStateOf(fileList.firstOrNull { it.filepath == currentRoute })
+                                                }
+
+                                                LaunchedEffect(currentRoute) {
+                                                    println("currentRoute: $currentRoute")
+                                                    println("filePath: ${selectedFile?.filepath.orEmpty()}")
+                                                    bytesCode = Res.readBytes(selectedFile?.filepath.orEmpty())
+                                                }
+
+                                                Code(
+                                                    fileName = fileList.firstOrNull { it.filepath == currentRoute }?.name.orEmpty(),
+                                                    code = bytesCode.decodeToString(),
+                                                    canExpand = false,
+                                                    darkMode = isDark,
+                                                    canScrolled = true
+                                                )
+                                            }
                                         }
                                     }
                                 )
