@@ -33,13 +33,16 @@ import com.oratakashi.design.docs.ui.component.sidebar.selectedOutline
 import com.oratakashi.design.foundation.OrataTheme
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Moon
+import compose.icons.feathericons.Sun
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeSidebar(
+    darkMode: Boolean = true,
     fileList: List<TemplateContent> = emptyList(),
     selected: TemplateContent? = null,
     onSidebarClick: (TemplateContent) -> Unit = {},
+    onDarkModeChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -71,22 +74,18 @@ fun CodeSidebar(
 
                         IconButton(
                             onClick = {
-
+                                onDarkModeChange.invoke(!darkMode)
                             }
                         ) {
                             Icon(
-                                imageVector = FeatherIcons.Moon,
+                                imageVector = if (darkMode) FeatherIcons.Moon else FeatherIcons.Sun,
                                 contentDescription = null
                             )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = OrataTheme.colors.surface
-                )
             )
         },
-        containerColor = OrataTheme.colors.surface,
         modifier = modifier
     ) { innerPadding ->
         LazyColumn(

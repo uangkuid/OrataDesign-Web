@@ -301,6 +301,7 @@ fun <T : BaseNavigation> ComponentPreview(
                                                 )
 
                                                 CodeSidebar(
+                                                    darkMode = isDark,
                                                     selected = selectedSidebar,
                                                     onSidebarClick = {
                                                         selectedSidebar = it
@@ -310,6 +311,9 @@ fun <T : BaseNavigation> ComponentPreview(
                                                                 it.filepath
                                                             )
                                                         }
+                                                    },
+                                                    onDarkModeChange = {
+                                                        isDark = it
                                                     },
                                                     fileList = fileList,
                                                     modifier = Modifier
@@ -341,8 +345,6 @@ fun <T : BaseNavigation> ComponentPreview(
                                                 }
 
                                                 LaunchedEffect(currentRoute) {
-                                                    println("currentRoute: $currentRoute")
-                                                    println("filePath: ${selectedFile?.filepath.orEmpty()}")
                                                     bytesCode = Res.readBytes(selectedFile?.filepath.orEmpty())
                                                 }
 
@@ -351,7 +353,14 @@ fun <T : BaseNavigation> ComponentPreview(
                                                     code = bytesCode.decodeToString(),
                                                     canExpand = false,
                                                     darkMode = isDark,
-                                                    canScrolled = true
+                                                    canScrolled = true,
+                                                    onBackPress = if (!showBack) null else {
+                                                        {
+                                                            coroutineScope.launch {
+                                                                navigator.navigateBack()
+                                                            }
+                                                        }
+                                                    }
                                                 )
                                             }
                                         }
