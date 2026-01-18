@@ -21,11 +21,13 @@ import com.oratakashi.design.docs.navigation.page.AlertNavigation
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
+import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.component.switches.Switch
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.alert.Alert
 import com.oratakashi.design.docs.ui.templates.alert.AlertConfig
+import com.oratakashi.design.docs.ui.templates.alert.variant.info.InfoAlert
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,6 +190,22 @@ fun AlertScreen(
                         AttributeTable(
                             data = data
                         )
+                    }
+                )
+            }
+
+            item(
+                key = "info_variant"
+            ) {
+                ContentSection(
+                    title = "Info Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = AlertNavigation,
+                            type = PreviewType.Variant("info")
+                        ) {
+                            InfoAlert()
+                        }
                     }
                 )
             }

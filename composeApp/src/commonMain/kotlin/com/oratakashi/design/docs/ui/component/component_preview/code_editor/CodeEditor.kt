@@ -29,6 +29,7 @@ import com.oratakashi.design.docs.data.model.code_sidebar.TemplateManifest
 import com.oratakashi.design.docs.helpers.NavigationHelpers
 import com.oratakashi.design.docs.navigation.BaseNavigation
 import com.oratakashi.design.docs.ui.component.code.Code
+import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.component_preview.platform.MacOSWindowControls
 import com.oratakashi.design.foundation.OrataAppTheme
 import com.oratakashi.design.foundation.OrataTheme
@@ -51,14 +52,22 @@ fun <T : BaseNavigation> CodeEditor(
     navigation: T?,
     isDark: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
+    type: PreviewType = PreviewType.Default,
     templateManifest: List<TemplateManifest>
 ) {
     val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
     val fileList = remember(templateManifest) {
-        templateManifest
-            .firstOrNull { it.name == navigation?.title?.lowercase() }
-            ?.content ?: emptyList()
+        if (type is PreviewType.Variant) {
+            templateManifest
+                .firstOrNull { it.name == navigation?.title?.lowercase() }
+                ?.variant?.firstOrNull { it.name == type.name }
+                ?.content ?: emptyList()
+        } else {
+            templateManifest
+                .firstOrNull { it.name == navigation?.title?.lowercase() }
+                ?.content ?: emptyList()
+        }
     }
     var selectedSidebar: TemplateContent? by remember(fileList) {
         mutableStateOf(null)

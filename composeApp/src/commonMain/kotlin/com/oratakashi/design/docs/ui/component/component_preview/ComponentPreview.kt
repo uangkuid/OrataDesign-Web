@@ -1,5 +1,8 @@
 package com.oratakashi.design.docs.ui.component.component_preview
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -39,6 +42,7 @@ import com.oratakashi.design.docs.ui.component.component_preview.previewer.Previ
 @Composable
 fun <T : BaseNavigation> ComponentPreview(
     navigation: T?,
+    type: PreviewType = PreviewType.Default,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -100,6 +104,12 @@ fun <T : BaseNavigation> ComponentPreview(
             HorizontalPager(
                 state = mainPagerState,
                 modifier = Modifier
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
             ) { pageIndex ->
                 when (pageIndex) {
                     PreviewState.Preview.ordinal -> Previewer(
@@ -117,7 +127,8 @@ fun <T : BaseNavigation> ComponentPreview(
                             navigation = navigation,
                             isDark = isDark,
                             onDarkModeChange = { isDark = it },
-                            templateManifest = templateManifest
+                            templateManifest = templateManifest,
+                            type = type
                         )
                     }
                 }

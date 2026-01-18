@@ -49,13 +49,15 @@ if (fs.existsSync(templatesDir)) {
   
   for (const itemName of items) {
     const itemPath = path.join(templatesDir, itemName);
-    const files = fs.readdirSync(itemPath, { withFileTypes: true })
+    const itemContents = fs.readdirSync(itemPath, { withFileTypes: true });
+
+    // Get direct files in the template folder
+    const directFiles = itemContents
       .filter(f => f.isFile())
       .map(f => {
         const fileName = f.name;
         const ext = path.extname(fileName);
         const type = getFileType(ext);
-        // ComposeResources relative path
         const relPath = path.join('files/templates', itemName, fileName);
         return {
           name: fileName,
@@ -66,10 +68,59 @@ if (fs.existsSync(templatesDir)) {
       })
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    manifest.push({
-      name: itemName,
-      content: files
-    });
+    // Get subdirectories (variants) - check if there's a "variant" subfolder
+    let variants = [];
+    const variantFolder = itemContents.find(item => item.isDirectory() && item.name === 'variant');
+
+    if (variantFolder) {
+      const variantPath = path.join(itemPath, 'variant');
+      const variantSubdirs = fs.readdirSync(variantPath, { withFileTypes: true })
+        .filter(item => item.isDirectory());
+
+      variants = variantSubdirs.map(subDir => {
+        const subDirName = subDir.name;
+        const subDirPath = path.join(variantPath, subDirName);
+
+        // Read only files in the variant folder (ignore deeper subdirectories)
+        const variantFiles = fs.readdirSync(subDirPath, { withFileTypes: true })
+          .filter(f => f.isFile())
+          .map(f => {
+            const fileName = f.name;
+            const ext = path.extname(fileName);
+            const type = getFileType(ext);
+            const relPath = path.join('files/templates', itemName, 'variant', subDirName, fileName);
+            return {
+              name: fileName,
+              filepath: relPath,
+              extension: ext,
+              fileType: type
+            };
+          })
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        return {
+          name: subDirName,
+          content: variantFiles
+        };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    const templateEntry = {
+      name: itemName
+    };
+
+    // Add variants array if there are any subdirectories
+    if (variants.length > 0) {
+      templateEntry.variant = variants;
+    }
+
+    // Add content array if there are any direct files
+    if (directFiles.length > 0) {
+      templateEntry.content = directFiles;
+    }
+
+    manifest.push(templateEntry);
   }
 
   console.log('Manifest: ' + JSON.stringify(manifest, null, 2));
