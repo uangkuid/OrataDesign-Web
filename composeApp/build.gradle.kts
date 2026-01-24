@@ -57,15 +57,15 @@ kotlin {
             implementation(libs.datatable.material3)
             implementation(libs.highlights)
             implementation(libs.ktor.client.cio)
-            implementation("io.ktor:ktor-client-content-negotiation:3.3.3")
-            implementation("io.ktor:ktor-client-logging:3.3.3")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.3")
-            implementation("io.ktor:ktor-serialization-kotlinx-xml:3.3.3")
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.serialization.kotlinx.xml)
             implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
-            implementation("io.insert-koin:koin-core")
-            implementation("io.insert-koin:koin-compose")
-            implementation("io.insert-koin:koin-compose-viewmodel")
-            implementation("io.insert-koin:koin-compose-viewmodel-navigation")
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -123,4 +123,57 @@ compose.resources {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
+
+/**
+ * Task to generate manifest.json for templates directory.
+ * This task executes a Node.js script that scans all subdirectories in the templates folder
+ * and creates a JSON manifest listing all files within each subdirectory.
+ * 
+ * @author oratakashi
+ * @since 14 Jan 2026
+ */
+tasks.register<Exec>("generateTemplateManifest") {
+    description = "Generates manifest.json for templates directory"
+    group = "build"
+    
+    workingDir = projectDir
+    commandLine("node", "scripts/generateManifest.js")
+    
+    val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
+    val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
+    
+    inputs.dir(templatesDir)
+    outputs.file(outputFile)
+}
+
+// Make generateTemplateManifest run before compose resource generation
+tasks.matching { 
+    it.name == "generateComposeResClass" || 
+    it.name.endsWith("GenerateComposeResClass")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Add dependency for resource copying tasks
+tasks.matching {
+    it.name.contains("copyNonXmlValueResources")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before JVM run tasks
+tasks.matching { 
+    it.name == "run" || 
+    it.name == "jvmRun"
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
+// Run before Wasm/JS browser run tasks
+tasks.matching {
+    it.name.contains("wasmJs") && it.name.contains("Run")
+}.configureEach {
+    dependsOn("generateTemplateManifest")
+}
+
 

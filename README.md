@@ -162,9 +162,15 @@ OrataDesign-Web/
 │   └── workflows/
 │       └── deploy-github-pages.yml  # GitHub Pages deployment workflow
 ├── composeApp/                    # Main application module
+│   ├── scripts/
+│   │   └── generateManifest.js   # Auto-generates template manifest
 │   ├── src/
 │   │   ├── androidMain/          # Android-specific code
 │   │   ├── commonMain/           # Shared code across all platforms
+│   │   │   ├── composeResources/
+│   │   │   │   └── files/
+│   │   │   │       └── template/
+│   │   │   │           └── manifest.json  # Auto-generated file
 │   │   │   └── kotlin/
 │   │   │       └── com/oratakashi/design/docs/
 │   │   │           ├── ui/       # UI components and screens
@@ -177,7 +183,8 @@ OrataDesign-Web/
 │   │   │           │   │       ├── textfield/  # TextField component docs
 │   │   │           │   │       ├── typography/ # Typography docs
 │   │   │           │   │       └── ...
-│   │   │           │   └── component/  # Reusable UI components
+│   │   │           │   ├── component/  # Reusable UI components
+│   │   │           │   └── templates/  # Code templates for examples
 │   │   │           ├── navigation/     # Navigation definitions
 │   │   │           ├── theme/          # App theme configuration
 │   │   │           └── icons/          # Custom icons
@@ -187,6 +194,45 @@ OrataDesign-Web/
 ├── gradle/                        # Gradle wrapper and dependencies
 ├── build.gradle.kts              # Root build configuration
 └── settings.gradle.kts           # Project settings
+```
+
+### Automatic Template Manifest Generation
+
+The project includes an automated system that generates a `manifest.json` file listing all template files:
+
+**How it works:**
+- A Node.js script (`composeApp/scripts/generateManifest.js`) scans the `templates` directory
+- It creates a JSON array with objects containing template names and their files
+- The Gradle task `generateTemplateManifest` automatically runs before any build or run command
+- The manifest.json is auto-generated and should not be committed to git
+
+**Example manifest output:**
+```json
+[
+  {
+    "name": "alert",
+    "content": [
+      "Alert.kt",
+      "AlertConfig.kt"
+    ]
+  },
+  {
+    "name": "snackbar",
+    "content": [
+      "config.yaml",
+      "main.kt"
+    ]
+  }
+]
+```
+
+**To manually regenerate the manifest:**
+```bash
+# From the composeApp directory
+node scripts/generateManifest.js
+
+# Or using Gradle
+./gradlew :composeApp:generateTemplateManifest
 ```
 
 ## 🎯 Using Orata Design System

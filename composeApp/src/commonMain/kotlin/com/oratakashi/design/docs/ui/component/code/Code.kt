@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +38,7 @@ import com.oratakashi.design.component.button.OraTransparentButton
 import com.oratakashi.design.foundation.OrataTheme
 import com.oratakashi.design.docs.helpers.ClipboardHelpers
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.Check
 import compose.icons.feathericons.Copy
 import dev.snipme.highlights.Highlights
@@ -51,7 +55,10 @@ fun Code(
     code: String = "",
     language: SyntaxLanguage = SyntaxLanguage.DEFAULT,
     darkMode: Boolean = true,
-    canExpand: Boolean = true
+    canExpand: Boolean = true,
+    canScrolled: Boolean = false,
+    onBackPress: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     val highlights = remember(code, language, darkMode) {
         Highlights
@@ -64,11 +71,12 @@ fun Code(
     }
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
     val minCollapsedHeight = 120.dp
     var copyIcon by remember { mutableStateOf(FeatherIcons.Copy) }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .animateContentSize(
                 animationSpec = spring(
@@ -90,6 +98,13 @@ fun Code(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                AnimatedVisibility(onBackPress != null) {
+                    if (onBackPress != null) {
+                        IconButton(onClick = onBackPress) {
+                            Icon(imageVector = FeatherIcons.ArrowLeft, null)
+                        }
+                    }
+                }
                 AnimatedVisibility(fileName.isNotBlank()) {
                     Text(
                         text = fileName,
@@ -138,6 +153,13 @@ fun Code(
                                 Modifier.heightIn(max = minCollapsedHeight)
                             } else {
                                 Modifier.wrapContentHeight()
+                            }
+                        )
+                        .then(
+                            if (canScrolled) {
+                                Modifier.verticalScroll(scrollState)
+                            } else {
+                                Modifier
                             }
                         )
                         .padding(16.dp)

@@ -21,11 +21,16 @@ import com.oratakashi.design.docs.navigation.page.AlertNavigation
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
+import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.component.switches.Switch
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.alert.Alert
 import com.oratakashi.design.docs.ui.templates.alert.AlertConfig
+import com.oratakashi.design.docs.ui.templates.alert.variant.error.ErrorAlert
+import com.oratakashi.design.docs.ui.templates.alert.variant.info.InfoAlert
+import com.oratakashi.design.docs.ui.templates.alert.variant.success.SuccessAlert
+import com.oratakashi.design.docs.ui.templates.alert.variant.warning.WarningAlert
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -168,7 +173,9 @@ fun AlertScreen(
 
                         Text("Alerts are typically used to communicate important information, request user confirmation, or present time-sensitive choices. By appearing as an overlay on top of the current interface, the Alert component captures user attention while maintaining continuity with the underlying content.")
 
-                        ComponentPreview {
+                        ComponentPreview(
+                            navigation = AlertNavigation
+                        ) {
                             Alert(alertData) {
                                 alertData = alertData.copy(isVisible = false)
                             }
@@ -186,6 +193,70 @@ fun AlertScreen(
                         AttributeTable(
                             data = data
                         )
+                    }
+                )
+            }
+
+            item(
+                key = "info_variant"
+            ) {
+                ContentSection(
+                    title = "Info Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = AlertNavigation,
+                            type = PreviewType.Variant("info")
+                        ) {
+                            InfoAlert()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "warning_variant"
+            ) {
+                ContentSection(
+                    title = "Warning Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = AlertNavigation,
+                            type = PreviewType.Variant("warning")
+                        ) {
+                            WarningAlert()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "success_variant"
+            ) {
+                ContentSection(
+                    title = "Success Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = AlertNavigation,
+                            type = PreviewType.Variant("success")
+                        ) {
+                            SuccessAlert()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "error_variant"
+            ) {
+                ContentSection(
+                    title = "Error Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = AlertNavigation,
+                            type = PreviewType.Variant("error")
+                        ) {
+                            ErrorAlert()
+                        }
                     }
                 )
             }

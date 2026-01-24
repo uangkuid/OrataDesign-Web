@@ -194,7 +194,7 @@ fun SidebarMenu(
 }
 
 @Composable
-private fun Modifier.selectedOutline(
+fun Modifier.selectedOutline(
     outlineColor: Color,
     outlineWidth: Dp,
     radius: Dp = 1.dp
