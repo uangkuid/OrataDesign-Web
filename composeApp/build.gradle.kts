@@ -137,8 +137,16 @@ tasks.register<Exec>("generateTemplateManifest") {
     group = "build"
     
     workingDir = projectDir
-    commandLine("node", "scripts/generateManifest.js")
-    
+
+    // Find node executable - try common locations
+    val nodeExecutable = listOf(
+        "/usr/local/bin/node",
+        "/opt/homebrew/bin/node",
+        System.getenv("NODE_PATH")?.let { "$it/node" }
+    ).firstOrNull { it != null && file(it).exists() } ?: "node"
+
+    commandLine(nodeExecutable, "scripts/generateManifest.js")
+
     val templatesDir = file("src/commonMain/kotlin/com/oratakashi/design/docs/ui/templates")
     val outputFile = file("src/commonMain/composeResources/files/template/manifest.json")
     
