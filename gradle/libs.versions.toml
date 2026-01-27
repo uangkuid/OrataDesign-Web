@@ -20,7 +20,7 @@ kotlin = "2.3.0"
 
 kotlinx-coroutines = "1.10.2"
 kotlinxDatetime = "0.7.1-0.6.x-compat"
-ktorClientCio = "3.3.3"
+ktorClientCio = "3.4.0"
 navigation-compose = "2.9.1"
 plugin-serialization = "2.3.0"
 kotlinx-serialization-json = "1.9.0"
