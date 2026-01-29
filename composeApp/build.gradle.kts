@@ -16,6 +16,7 @@ kotlin {
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
+            freeCompilerArgs.add("-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi")
         }
     }
 
