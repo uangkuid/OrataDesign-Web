@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import com.oratakashi.design.component.button.OraButton
 
 @Composable
-fun Button() {
+fun Button(
+    config: ButtonConfig
+) {
     OraButton(
         onClick = {
 

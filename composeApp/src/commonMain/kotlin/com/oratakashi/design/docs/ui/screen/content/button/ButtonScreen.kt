@@ -7,6 +7,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation
@@ -15,6 +19,7 @@ import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.anchortext.AnchorText
 import com.oratakashi.design.docs.ui.templates.button.Button
+import com.oratakashi.design.docs.ui.templates.button.ButtonConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,6 +28,18 @@ fun ButtonScreen(
     showBack: Boolean = false
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    var buttonData by remember {
+        mutableStateOf(
+            ButtonConfig(
+                label = "Button",
+                isEnabled = true,
+                showIconLeft = true,
+                showRightIcon = true
+            )
+        )
+    }
+
     DetailContent(
         scrollBehavior = scrollBehavior,
         onBackClick = onBackClick,
@@ -38,6 +55,7 @@ fun ButtonScreen(
             item(
                 key = "preview"
             ) {
+
                 ContentSection(
                     content = {
                         Text("Buttons are interactive elements used to initiate actions or direct users to internal or external links. They serve as clear call-to-action components within the interface.")
@@ -47,7 +65,7 @@ fun ButtonScreen(
                         ComponentPreview(
                             navigation = ButtonNavigation
                         ) {
-                            Button()
+                            Button(config = buttonData)
                         }
                     }
                 )
