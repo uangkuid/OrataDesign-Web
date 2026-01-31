@@ -2,6 +2,8 @@ package com.oratakashi.design.docs.ui.component.spinner
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -14,40 +16,56 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.oratakashi.design.component.textfield.OraTextField
 
 /**
  * Spinner is a generic composable function that displays a dropdown menu for selecting an item from a list.
  *
- * @param item The list of items to display in the dropdown menu.
+ * @param items The list of items to display in the dropdown menu.
  * @param selected The currently selected item.
  * @param onItemSelected Callback invoked when an item is selected.
+ * @param modifier A Modifier for styling the spinner component.
+ * @param label The label text to display in the text field.
  * @author oratakashi
  * @since 30 Jan 2026
  */
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("DEPRECATION")
 @Composable
-fun <T> Spinner(
-    item: List<T>,
-    selected: T?,
-    onItemSelected: (T) -> Unit,
-    modifier: Modifier = Modifier,
-    label: String = "Select Option"
+fun Spinner(
+    items: List<String>,
+    selected: String?,
+    onItemSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
-        modifier = modifier.padding(16.dp)
+        onExpandedChange = { expanded = it },
+        modifier = modifier
     ) {
         OutlinedTextField(
-            value = selected?.toString() ?: "",
+            value = selected ?: "",
             onValueChange = {},
             readOnly = true,
-            label = { Text(label) },
+            shape = RoundedCornerShape(16.dp),
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().menuAnchor()
         )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            items.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        onItemSelected(item)
+                        expanded = false
+                    }
+                )
+            }
+        }
 
     }
 }

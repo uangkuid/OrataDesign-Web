@@ -11,6 +11,7 @@ fun Button(
         onClick = {
 
         },
-        label = "Button"
+        label = config.label,
+        size = config.size
     )
 }

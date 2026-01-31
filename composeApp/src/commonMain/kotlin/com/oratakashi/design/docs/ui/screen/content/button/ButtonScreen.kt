@@ -2,6 +2,7 @@ package com.oratakashi.design.docs.ui.screen.content.button
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -11,11 +12,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.oratakashi.design.component.button.OraButtonColors
+import com.oratakashi.design.component.button.OraButtonSize
+import com.oratakashi.design.component.textfield.OraTextField
+import com.oratakashi.design.component.textfield.OraTextFieldState
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
+import com.oratakashi.design.docs.ui.component.spinner.Spinner
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.anchortext.AnchorText
 import com.oratakashi.design.docs.ui.templates.button.Button
@@ -35,10 +44,53 @@ fun ButtonScreen(
                 label = "Button",
                 isEnabled = true,
                 showIconLeft = true,
-                showRightIcon = true
+                showRightIcon = true,
+                size = OraButtonSize.Medium
             )
         )
     }
+
+    val data: List<AttributeData> = listOf(
+        AttributeData(
+            name = "label",
+            description = "The text to be displayed inside the button",
+            required = true,
+            type =  "string",
+            control = {
+                OraTextField(
+                    value = buttonData.label,
+                    onValueChange = {
+                        buttonData = buttonData.copy(label = it)
+                    },
+                    state = if (buttonData.label.isEmpty()) {
+                        OraTextFieldState.Error("This field is required")
+                    } else {
+                        OraTextFieldState.Default()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        ),
+        AttributeData(
+            name = "size",
+            description = "The size configuration for this button",
+            required = true,
+            type =  "string",
+            control = {
+                Spinner(
+                    OraButtonSize.entries.map { it.name },
+                    selected = buttonData.size.name,
+                    onItemSelected = {
+                        buttonData = buttonData.copy(
+                            size = OraButtonSize.valueOf(it)
+                        )
+
+                    }
+                )
+            }
+        )
+    )
+
 
     DetailContent(
         scrollBehavior = scrollBehavior,
@@ -67,6 +119,19 @@ fun ButtonScreen(
                         ) {
                             Button(config = buttonData)
                         }
+                    }
+                )
+            }
+
+            item(
+                key = "attributes"
+            ) {
+                ContentSection(
+                    title = "Attributes",
+                    content = {
+                        AttributeTable(
+                            data = data
+                        )
                     }
                 )
             }
