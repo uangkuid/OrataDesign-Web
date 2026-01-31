@@ -2,6 +2,7 @@ package com.oratakashi.design.docs.ui.screen.content.button
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -11,9 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.oratakashi.design.component.button.OraButtonColors
+import com.oratakashi.design.component.button.OraButtonSize
+import com.oratakashi.design.component.textfield.OraTextField
+import com.oratakashi.design.component.textfield.OraTextFieldState
 import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
+import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.component.spinner.Spinner
@@ -36,14 +44,52 @@ fun ButtonScreen(
                 label = "Button",
                 isEnabled = true,
                 showIconLeft = true,
-                showRightIcon = true
+                showRightIcon = true,
+                size = OraButtonSize.Medium
             )
         )
     }
 
-    var selected: String? by remember {
-        mutableStateOf("Test 1")
-    }
+    val data: List<AttributeData> = listOf(
+        AttributeData(
+            name = "label",
+            description = "The text to be displayed inside the button",
+            required = true,
+            type =  "string",
+            control = {
+                OraTextField(
+                    value = buttonData.label,
+                    onValueChange = {
+                        buttonData = buttonData.copy(label = it)
+                    },
+                    state = if (buttonData.label.isEmpty()) {
+                        OraTextFieldState.Error("This field is required")
+                    } else {
+                        OraTextFieldState.Default()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        ),
+        AttributeData(
+            name = "size",
+            description = "The size configuration for this button",
+            required = true,
+            type =  "string",
+            control = {
+                Spinner(
+                    OraButtonSize.entries.map { it.name },
+                    selected = buttonData.size.name,
+                    onItemSelected = {
+                        buttonData = buttonData.copy(
+                            size = OraButtonSize.valueOf(it)
+                        )
+
+                    }
+                )
+            }
+        )
+    )
 
 
     DetailContent(
@@ -68,23 +114,24 @@ fun ButtonScreen(
 
                         Text("Buttons typically contain concise and descriptive labels, and may optionally include icons to reinforce meaning and improve visual clarity. When designed and used consistently, buttons help guide user behavior and make interactions more intuitive and efficient.")
 
-//                        Spinner(
-//                            listOf(
-//                                "Test 1",
-//                                "Test 2",
-//                                "Test 3"
-//                            ),
-//                            selected = selected,
-//                            onItemSelected = {
-//                                selected = it
-//                            }
-//                        )
-
                         ComponentPreview(
                             navigation = ButtonNavigation
                         ) {
                             Button(config = buttonData)
                         }
+                    }
+                )
+            }
+
+            item(
+                key = "attributes"
+            ) {
+                ContentSection(
+                    title = "Attributes",
+                    content = {
+                        AttributeTable(
+                            data = data
+                        )
                     }
                 )
             }

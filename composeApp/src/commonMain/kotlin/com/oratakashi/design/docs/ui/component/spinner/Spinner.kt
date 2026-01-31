@@ -2,6 +2,7 @@ package com.oratakashi.design.docs.ui.component.spinner
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -34,20 +35,19 @@ fun Spinner(
     items: List<String>,
     selected: String?,
     onItemSelected: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: String = "Select Option"
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
-        modifier = modifier.padding(16.dp)
+        modifier = modifier
     ) {
         OutlinedTextField(
             value = selected ?: "",
             onValueChange = {},
             readOnly = true,
-            label = { Text(label) },
+            shape = RoundedCornerShape(16.dp),
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier.fillMaxWidth().menuAnchor()
         )
