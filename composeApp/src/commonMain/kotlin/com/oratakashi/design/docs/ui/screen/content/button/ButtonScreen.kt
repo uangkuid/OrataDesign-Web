@@ -16,6 +16,7 @@ import com.oratakashi.design.docs.navigation.page.AnchorTextNavigation
 import com.oratakashi.design.docs.navigation.page.ButtonNavigation
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
+import com.oratakashi.design.docs.ui.component.spinner.Spinner
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.anchortext.AnchorText
 import com.oratakashi.design.docs.ui.templates.button.Button
@@ -40,6 +41,11 @@ fun ButtonScreen(
         )
     }
 
+    var selected: String? by remember {
+        mutableStateOf("Test 1")
+    }
+
+
     DetailContent(
         scrollBehavior = scrollBehavior,
         onBackClick = onBackClick,
@@ -61,6 +67,18 @@ fun ButtonScreen(
                         Text("Buttons are interactive elements used to initiate actions or direct users to internal or external links. They serve as clear call-to-action components within the interface.")
 
                         Text("Buttons typically contain concise and descriptive labels, and may optionally include icons to reinforce meaning and improve visual clarity. When designed and used consistently, buttons help guide user behavior and make interactions more intuitive and efficient.")
+
+//                        Spinner(
+//                            listOf(
+//                                "Test 1",
+//                                "Test 2",
+//                                "Test 3"
+//                            ),
+//                            selected = selected,
+//                            onItemSelected = {
+//                                selected = it
+//                            }
+//                        )
 
                         ComponentPreview(
                             navigation = ButtonNavigation
