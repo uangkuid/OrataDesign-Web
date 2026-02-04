@@ -60,6 +60,12 @@ jobs:
             # Convert created_at to epoch time
             CACHE_TIME=$(date -d "$CACHE_CREATED_AT" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$CACHE_CREATED_AT" +%s 2>/dev/null)
             
+            # Validate date parsing
+            if [ -z "$CACHE_TIME" ] || ! [[ "$CACHE_TIME" =~ ^[0-9]+$ ]]; then
+              echo "Warning: Could not parse date for cache $CACHE_KEY (ID: $CACHE_ID), skipping..."
+              continue
+            fi
+            
             # Calculate age in seconds
             AGE=$((CURRENT_TIME - CACHE_TIME))
             
