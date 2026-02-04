@@ -51,8 +51,8 @@ jobs:
           DELETED_COUNT=0
           KEPT_COUNT=0
           
-          # Process each cache
-          echo "$CACHES" | jq -c '.' | while read -r cache; do
+          # Process each cache using process substitution to preserve variables
+          while read -r cache; do
             CACHE_ID=$(echo "$cache" | jq -r '.id')
             CACHE_KEY=$(echo "$cache" | jq -r '.key')
             CACHE_CREATED_AT=$(echo "$cache" | jq -r '.created_at')
@@ -77,7 +77,7 @@ jobs:
               echo "Keeping cache: $CACHE_KEY (Age: $((AGE / 3600)) hours)"
               KEPT_COUNT=$((KEPT_COUNT + 1))
             fi
-          done
+          done < <(echo "$CACHES" | jq -c '.')
           
           echo "Cache cleanup completed!"
           echo "Deleted: $DELETED_COUNT cache(s)"
