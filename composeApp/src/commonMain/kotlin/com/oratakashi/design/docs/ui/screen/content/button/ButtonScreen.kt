@@ -23,6 +23,7 @@ import com.oratakashi.design.docs.navigation.page.ButtonNavigation
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
+import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.component.spinner.Spinner
 import com.oratakashi.design.docs.ui.component.switches.Switch
@@ -30,6 +31,10 @@ import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.anchortext.AnchorText
 import com.oratakashi.design.docs.ui.templates.button.Button
 import com.oratakashi.design.docs.ui.templates.button.ButtonConfig
+import com.oratakashi.design.docs.ui.templates.button.variant.outline.OutlineButton
+import com.oratakashi.design.docs.ui.templates.button.variant.primary.PrimaryButton
+import com.oratakashi.design.docs.ui.templates.button.variant.tonal.TonalButton
+import com.oratakashi.design.docs.ui.templates.button.variant.transaparent.TransparentButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -190,6 +195,70 @@ fun ButtonScreen(
                         AttributeTable(
                             data = data
                         )
+                    }
+                )
+            }
+
+            item(
+                key = "primary_button"
+            ) {
+                ContentSection(
+                    title = "Primary Button Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = ButtonNavigation,
+                            type = PreviewType.Variant("primary")
+                        ) {
+                            PrimaryButton()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "tonal_button"
+            ) {
+                ContentSection(
+                    title = "Tonal Button Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = ButtonNavigation,
+                            type = PreviewType.Variant("tonal")
+                        ) {
+                            TonalButton()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "outline_button"
+            ) {
+                ContentSection(
+                    title = "Outline Button Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = ButtonNavigation,
+                            type = PreviewType.Variant("outline")
+                        ) {
+                            OutlineButton()
+                        }
+                    }
+                )
+            }
+
+            item(
+                key = "transparent_button"
+            ) {
+                ContentSection(
+                    title = "Transparent Button Variant",
+                    content = {
+                        ComponentPreview(
+                            navigation = ButtonNavigation,
+                            type = PreviewType.Variant("transparent")
+                        ) {
+                            TransparentButton()
+                        }
                     }
                 )
             }
