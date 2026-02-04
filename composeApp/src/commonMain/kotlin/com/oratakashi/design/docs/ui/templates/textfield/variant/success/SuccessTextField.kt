@@ -26,7 +26,7 @@ fun SuccessTextField() {
         state = OraTextFieldState.Success("Email is valid"),
         placeholder = "Enter your email",
         label = "Email Address",
-        leadingIcon = {
+        iconLeft = {
             Icon(FeatherIcons.CheckCircle, contentDescription = null)
         }
     )

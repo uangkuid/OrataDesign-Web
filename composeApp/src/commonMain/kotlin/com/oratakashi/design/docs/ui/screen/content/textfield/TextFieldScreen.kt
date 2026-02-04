@@ -21,6 +21,7 @@ import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
 import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
+import com.oratakashi.design.docs.ui.component.spinner.Spinner
 import com.oratakashi.design.docs.ui.component.switches.Switch
 import com.oratakashi.design.docs.ui.screen.content.DetailContent
 import com.oratakashi.design.docs.ui.templates.textfield.TextField
@@ -49,8 +50,8 @@ fun TextFieldScreen(
                 state = OraTextFieldState.Default(),
                 enabled = true,
                 singleLine = true,
-                showLeadingIcon = true,
-                showTrailingIcon = true
+                showIconLeft = true,
+                showIconRight = true
             )
         )
     }
@@ -113,14 +114,28 @@ fun TextFieldScreen(
             required = false,
             type = "OraTextFieldState",
             control = {
-                Switch(
-                    checked = textFieldData.state is OraTextFieldState.Error,
-                    onCheckedChange = {
+                val stateOptions = listOf("Default", "Success", "Error", "Locked")
+                val currentState = when (textFieldData.state) {
+                    is OraTextFieldState.Default -> "Default"
+                    is OraTextFieldState.Success -> "Success"
+                    is OraTextFieldState.Error -> "Error"
+                    is OraTextFieldState.Locked -> "Locked"
+                }
+                Spinner(
+                    items = stateOptions,
+                    selected = currentState,
+                    onItemSelected = { selected ->
                         textFieldData = textFieldData.copy(
-                            state = if (it) {
-                                OraTextFieldState.Error("This field has an error")
-                            } else {
-                                OraTextFieldState.Default()
+                            state = when (selected) {
+                                "Default" -> OraTextFieldState.Default("Information text")
+                                "Success" -> OraTextFieldState.Success("This field is valid")
+                                "Error" -> OraTextFieldState.Error("This field has an error")
+                                "Locked" -> OraTextFieldState.Locked(
+                                    caption = "This field is locked",
+                                    lockedActionText = "Change",
+                                    onClickLockedAction = {}
+                                )
+                                else -> OraTextFieldState.Default()
                             }
                         )
                     }
@@ -156,29 +171,29 @@ fun TextFieldScreen(
             }
         ),
         AttributeData(
-            name = "leadingIcon",
-            description = "The optional icon to be displayed at the start of the text field",
+            name = "iconLeft",
+            description = "The optional icon to be displayed on the left side of the text field",
             required = false,
             type = "Composable Function",
             control = {
                 Switch(
-                    checked = textFieldData.showLeadingIcon,
+                    checked = textFieldData.showIconLeft,
                     onCheckedChange = {
-                        textFieldData = textFieldData.copy(showLeadingIcon = it)
+                        textFieldData = textFieldData.copy(showIconLeft = it)
                     }
                 )
             }
         ),
         AttributeData(
-            name = "trailingIcon",
-            description = "The optional icon to be displayed at the end of the text field",
+            name = "iconRight",
+            description = "The optional icon to be displayed on the right side of the text field",
             required = false,
             type = "Composable Function",
             control = {
                 Switch(
-                    checked = textFieldData.showTrailingIcon,
+                    checked = textFieldData.showIconRight,
                     onCheckedChange = {
-                        textFieldData = textFieldData.copy(showTrailingIcon = it)
+                        textFieldData = textFieldData.copy(showIconRight = it)
                     }
                 )
             }

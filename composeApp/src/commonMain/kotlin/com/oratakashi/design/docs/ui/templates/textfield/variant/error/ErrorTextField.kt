@@ -26,7 +26,7 @@ fun ErrorTextField() {
         state = OraTextFieldState.Error("This field is required"),
         placeholder = "Enter your password",
         label = "Password",
-        leadingIcon = {
+        iconLeft = {
             Icon(FeatherIcons.AlertCircle, contentDescription = null)
         }
     )

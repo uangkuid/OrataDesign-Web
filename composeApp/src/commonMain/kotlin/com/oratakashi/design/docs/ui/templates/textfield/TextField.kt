@@ -31,12 +31,12 @@ fun TextField(
         placeholder = config.placeholder,
         label = config.label,
         modifier = modifier,
-        leadingIcon = if (config.showLeadingIcon) {
+        iconLeft = if (config.showIconLeft) {
             {
                 Icon(FeatherIcons.Mail, contentDescription = null)
             }
         } else null,
-        trailingIcon = if (config.showTrailingIcon) {
+        iconRight = if (config.showIconRight) {
             {
                 Icon(FeatherIcons.Eye, contentDescription = null)
             }

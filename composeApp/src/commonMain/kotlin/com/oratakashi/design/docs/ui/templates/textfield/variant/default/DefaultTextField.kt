@@ -26,7 +26,7 @@ fun DefaultTextField() {
         state = OraTextFieldState.Default(),
         placeholder = "Enter your email",
         label = "Email Address",
-        leadingIcon = {
+        iconLeft = {
             Icon(FeatherIcons.Mail, contentDescription = null)
         }
     )

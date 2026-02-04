@@ -23,7 +23,7 @@ fun DisabledTextField() {
         enabled = false,
         placeholder = "This field is disabled",
         label = "Username",
-        leadingIcon = {
+        iconLeft = {
             Icon(FeatherIcons.User, contentDescription = null)
         }
     )

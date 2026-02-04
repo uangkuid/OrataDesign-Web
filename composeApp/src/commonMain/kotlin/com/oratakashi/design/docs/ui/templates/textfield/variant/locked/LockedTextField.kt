@@ -28,7 +28,7 @@ fun LockedTextField() {
         ),
         placeholder = "Locked field",
         label = "Account Email (Locked)",
-        leadingIcon = {
+        iconLeft = {
             Icon(FeatherIcons.Lock, contentDescription = null)
         }
     )
