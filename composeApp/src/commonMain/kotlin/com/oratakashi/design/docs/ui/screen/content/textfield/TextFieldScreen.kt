@@ -29,6 +29,7 @@ import com.oratakashi.design.docs.ui.templates.textfield.variant.default.Default
 import com.oratakashi.design.docs.ui.templates.textfield.variant.disabled.DisabledTextField
 import com.oratakashi.design.docs.ui.templates.textfield.variant.error.ErrorTextField
 import com.oratakashi.design.docs.ui.templates.textfield.variant.locked.LockedTextField
+import com.oratakashi.design.docs.ui.templates.textfield.variant.success.SuccessTextField
 import com.oratakashi.design.component.textfield.OraTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,7 +109,7 @@ fun TextFieldScreen(
         ),
         AttributeData(
             name = "state",
-            description = "The current state of the text field (Default or Error)",
+            description = "The current state of the text field (Default, Success, Error, or Locked)",
             required = false,
             type = "OraTextFieldState",
             control = {
@@ -203,7 +204,7 @@ fun TextFieldScreen(
                     content = {
                         Text("The TextField component is a fundamental input element that allows users to enter and edit text. It provides a consistent and accessible way for users to input data within forms and interfaces.")
 
-                        Text("Text fields support various states including default, error, disabled, and locked states. They can include labels, placeholders, helper text, and icons to improve usability and provide visual feedback. The component is designed to be flexible and can be configured for single-line or multi-line input depending on the use case.")
+                        Text("Text fields support various states including default, success, error, disabled, and locked states. They can include labels, placeholders, helper text, and icons to improve usability and provide visual feedback. The component is designed to be flexible and can be configured for single-line or multi-line input depending on the use case.")
 
                         ComponentPreview(
                             navigation = TextFieldNavigation
@@ -260,6 +261,22 @@ fun TextFieldScreen(
                             type = PreviewType.Variant("error")
                         ) {
                             ErrorTextField()
+                        }
+                    }
+                )
+            }
+            
+            item(
+                key = "success_state"
+            ) {
+                ContentSection(
+                    title = "Success State",
+                    content = {
+                        ComponentPreview(
+                            navigation = TextFieldNavigation,
+                            type = PreviewType.Variant("success")
+                        ) {
+                            SuccessTextField()
                         }
                     }
                 )

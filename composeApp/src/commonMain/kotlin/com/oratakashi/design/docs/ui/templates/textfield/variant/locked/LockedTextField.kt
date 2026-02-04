@@ -19,12 +19,18 @@ fun LockedTextField() {
     OraTextField(
         value = value,
         onValueChange = { },
-        state = OraTextFieldState.Default(),
-        enabled = false,
+        state = OraTextFieldState.Locked(
+            caption = "This email is locked to your account",
+            lockedActionText = "Change",
+            onClickLockedAction = {
+                // Handle unlock action
+            }
+        ),
         placeholder = "Locked field",
         label = "Account Email (Locked)",
         leadingIcon = {
             Icon(FeatherIcons.Lock, contentDescription = null)
         }
     )
+}
 }

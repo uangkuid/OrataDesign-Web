@@ -1,0 +1,33 @@
+package com.oratakashi.design.docs.ui.templates.textfield.variant.success
+
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.oratakashi.design.component.textfield.OraTextField
+import com.oratakashi.design.component.textfield.OraTextFieldState
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.CheckCircle
+
+/**
+ * Success state TextField variant demonstrating successful validation.
+ * @author oratakashi
+ * @since 04 Feb 2026
+ */
+@Composable
+fun SuccessTextField() {
+    var value by remember { mutableStateOf("john.doe@example.com") }
+    
+    OraTextField(
+        value = value,
+        onValueChange = { value = it },
+        state = OraTextFieldState.Success("Email is valid"),
+        placeholder = "Enter your email",
+        label = "Email Address",
+        leadingIcon = {
+            Icon(FeatherIcons.CheckCircle, contentDescription = null)
+        }
+    )
+}
