@@ -209,7 +209,9 @@ fun SnackbarScreen(
                                 }
                             ) { paddingValues ->
                                 Column(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(paddingValues),
                                     verticalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
                                     Snackbar(snackbarData) {
