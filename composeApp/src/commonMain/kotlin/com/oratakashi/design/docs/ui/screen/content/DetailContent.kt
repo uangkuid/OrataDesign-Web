@@ -1,6 +1,7 @@
 package com.oratakashi.design.docs.ui.screen.content
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -76,10 +77,11 @@ internal fun <T : BaseNavigation> DetailContent(
             )
         },
         content =  { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                contentAlignment = Alignment.TopCenter
             ) {
                 content.invoke()
             }

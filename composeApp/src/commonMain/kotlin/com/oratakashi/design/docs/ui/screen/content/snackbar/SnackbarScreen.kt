@@ -3,11 +3,12 @@ package com.oratakashi.design.docs.ui.screen.content.snackbar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -179,13 +180,15 @@ fun SnackbarScreen(
         scrollBehavior = scrollBehavior,
         onBackClick = onBackClick,
         showBack = showBack,
-        navigation = SnackbarNavigation
+        navigation = SnackbarNavigation,
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(32.dp),
             contentPadding = PaddingValues(
                 vertical = 16.dp
-            )
+            ),
+            modifier = Modifier.fillMaxSize()
         ) {
             item(
                 key = "preview"
@@ -207,7 +210,10 @@ fun SnackbarScreen(
                                             OraSnackbar(it)
                                         }
                                     )
-                                }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(500.dp)
                             ) { paddingValues ->
                                 Column(
                                     modifier = Modifier
