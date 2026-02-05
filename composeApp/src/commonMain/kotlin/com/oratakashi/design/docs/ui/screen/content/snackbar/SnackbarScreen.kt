@@ -6,19 +6,28 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.oratakashi.design.component.button.OraButton
+import com.oratakashi.design.component.snackbar.OraSnackbar
+import com.oratakashi.design.component.snackbar.OraSnackbarHost
+import com.oratakashi.design.component.snackbar.OraSnackbarHostState
 import com.oratakashi.design.component.snackbar.OraSnackbarSize
 import com.oratakashi.design.component.textfield.OraTextField
 import com.oratakashi.design.component.textfield.OraTextFieldState
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.Info
+import kotlinx.coroutines.launch
 import com.oratakashi.design.docs.navigation.page.SnackbarNavigation
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
@@ -44,6 +53,8 @@ fun SnackbarScreen(
     showBack: Boolean = false
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val snackbarHostState = remember { OraSnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     var snackbarData by remember {
         mutableStateOf(
@@ -57,8 +68,6 @@ fun SnackbarScreen(
             )
         )
     }
-
-    var showSnackbar by remember { mutableStateOf(false) }
 
     val data: List<AttributeData> = listOf(
         AttributeData(
@@ -186,30 +195,44 @@ fun SnackbarScreen(
 
                         Text("Snackbars appear temporarily, towards the bottom of the screen. They shouldn't interrupt the user experience, and they don't require user input to disappear. They can contain an action or be dismissed automatically.")
 
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ComponentPreview(
+                            navigation = SnackbarNavigation
                         ) {
-                            ComponentPreview(
-                                navigation = SnackbarNavigation
-                            ) {
-                                Snackbar(snackbarData) {
-                                    // Close callback
+                            Scaffold(
+                                snackbarHost = {
+                                    OraSnackbarHost(
+                                        hostState = snackbarHostState,
+                                        snackbar = {
+                                            OraSnackbar(it)
+                                        }
+                                    )
                                 }
-                            }
+                            ) { paddingValues ->
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Snackbar(snackbarData) {
+                                        // Close callback
+                                    }
 
-                            OraButton(
-                                onClick = {
-                                    showSnackbar = true
-                                },
-                                label = "Show Snackbar",
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
-                        // Snackbar overlay that matches the preview
-                        if (showSnackbar) {
-                            Snackbar(snackbarData) {
-                                showSnackbar = false
+                                    OraButton(
+                                        onClick = {
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    title = snackbarData.title,
+                                                    message = snackbarData.description.ifEmpty { null },
+                                                    icon = if (snackbarData.includeIcon) FeatherIcons.Info else null,
+                                                    actionLabel = snackbarData.actionLabel.ifEmpty { null },
+                                                    withDismissAction = snackbarData.includeOnClose,
+                                                    size = snackbarData.size
+                                                )
+                                            }
+                                        },
+                                        label = "Show Snackbar",
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
                             }
                         }
                     }
