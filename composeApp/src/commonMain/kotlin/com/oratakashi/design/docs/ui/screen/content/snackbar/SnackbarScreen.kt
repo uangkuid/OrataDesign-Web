@@ -6,15 +6,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,7 +36,6 @@ import com.oratakashi.design.docs.ui.templates.snackbar.variant.normal.NormalSna
 import com.oratakashi.design.docs.ui.templates.snackbar.variant.success.SuccessSnackbar
 import com.oratakashi.design.docs.ui.templates.snackbar.variant.tertiary.TertiarySnackbar
 import com.oratakashi.design.docs.ui.templates.snackbar.variant.warning.WarningSnackbar
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,8 +44,6 @@ fun SnackbarScreen(
     showBack: Boolean = false
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     var snackbarData by remember {
         mutableStateOf(
@@ -63,6 +57,8 @@ fun SnackbarScreen(
             )
         )
     }
+
+    var showSnackbar by remember { mutableStateOf(false) }
 
     val data: List<AttributeData> = listOf(
         AttributeData(
@@ -203,15 +199,18 @@ fun SnackbarScreen(
 
                             OraButton(
                                 onClick = {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = snackbarData.title
-                                        )
-                                    }
+                                    showSnackbar = true
                                 },
                                 label = "Show Snackbar",
                                 modifier = Modifier.fillMaxWidth()
                             )
+                        }
+
+                        // Snackbar overlay that matches the preview
+                        if (showSnackbar) {
+                            Snackbar(snackbarData) {
+                                showSnackbar = false
+                            }
                         }
                     }
                 )

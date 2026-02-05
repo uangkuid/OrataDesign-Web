@@ -4,7 +4,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.oratakashi.design.component.snackbar.OraSnackbar
-import com.oratakashi.design.component.snackbar.OraSnackbarDefaults
 import com.oratakashi.design.component.snackbar.OraSnackbarTheme
 import com.oratakashi.design.component.snackbar.toColor
 import compose.icons.FeatherIcons
