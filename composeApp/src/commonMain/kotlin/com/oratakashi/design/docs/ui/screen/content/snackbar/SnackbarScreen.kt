@@ -34,6 +34,7 @@ import com.oratakashi.design.docs.navigation.page.SnackbarNavigation
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeData
 import com.oratakashi.design.docs.ui.component.attribute_table.AttributeTable
 import com.oratakashi.design.docs.ui.component.component_preview.ComponentPreview
+import com.oratakashi.design.docs.ui.component.component_preview.PreviewPlatform
 import com.oratakashi.design.docs.ui.component.component_preview.PreviewType
 import com.oratakashi.design.docs.ui.component.content_section.ContentSection
 import com.oratakashi.design.docs.ui.component.spinner.Spinner
@@ -195,12 +196,17 @@ fun SnackbarScreen(
             ) {
                 ContentSection(
                     content = {
+                        var currentDeviceType: PreviewPlatform by remember { mutableStateOf(PreviewPlatform.Website) }
+
                         Text("The Snackbar component is used to provide brief feedback about an operation through a message at the bottom of the screen. Snackbars inform users of a process that an app has performed or will perform.")
 
                         Text("Snackbars appear temporarily, towards the bottom of the screen. They shouldn't interrupt the user experience, and they don't require user input to disappear. They can contain an action or be dismissed automatically.")
 
                         ComponentPreview(
-                            navigation = SnackbarNavigation
+                            navigation = SnackbarNavigation,
+                            onDeviceChanges = {
+                                currentDeviceType = it
+                            }
                         ) {
                             Scaffold(
                                 snackbarHost = {
@@ -213,7 +219,13 @@ fun SnackbarScreen(
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(500.dp)
+                                    .height(
+                                        if (currentDeviceType == PreviewPlatform.iOS || currentDeviceType == PreviewPlatform.Android) {
+                                            700.dp
+                                        } else {
+                                            500.dp
+                                        }
+                                    )
                             ) { paddingValues ->
                                 Column(
                                     modifier = Modifier

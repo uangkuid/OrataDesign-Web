@@ -43,6 +43,7 @@ import com.oratakashi.design.docs.ui.component.component_preview.previewer.Previ
 fun <T : BaseNavigation> ComponentPreview(
     navigation: T?,
     type: PreviewType = PreviewType.Default,
+    onDeviceChanges: (PreviewPlatform) -> Unit = {},
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -114,7 +115,10 @@ fun <T : BaseNavigation> ComponentPreview(
                 when (pageIndex) {
                     PreviewState.Preview.ordinal -> Previewer(
                         deviceType = deviceType,
-                        onDeviceTypeChange = { deviceType = it },
+                        onDeviceTypeChange = {
+                            deviceType = it
+                            onDeviceChanges.invoke(PreviewPlatform.valueOf(it))
+                        },
                         isDark = isDark,
                         onDarkModeChange = { isDark = it },
                         previewPagerState = previewPagerState,
