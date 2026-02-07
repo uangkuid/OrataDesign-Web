@@ -1,11 +1,11 @@
-import com.android.build.api.dsl.androidLibrary
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
@@ -13,11 +13,11 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-            freeCompilerArgs.add("-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi")
-        }
+    androidLibrary {
+        compileSdk = 36
+        minSdk = 24
+        namespace = "com.oratakashi.design.docs.libs"
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
     jvm()
@@ -30,80 +30,80 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
-            implementation("io.insert-koin:koin-android")
+            api(compose.preview)
+            api(libs.androidx.activity.compose)
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api("io.insert-koin:koin-android")
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(libs.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.navigation.compose)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.composeIcons.feather)
-            implementation(libs.material.adaptive)
-            implementation(libs.material.navigation.suite)
-            implementation(libs.material.layout)
-            implementation(libs.material.navigation)
-            implementation(libs.ui.backhandler)
-            implementation(libs.constraintlayout.compose.multiplatform)
-            implementation(libs.designsystem)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.datatable.material3)
-            implementation(libs.highlights)
-            implementation(libs.ktor.client.cio)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.serialization.kotlinx.xml)
-            implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.koin.compose.viewmodel.navigation)
+            api(compose.runtime)
+            api(compose.foundation)
+            api(libs.material3)
+            api(compose.ui)
+            api(compose.components.resources)
+            api(compose.components.uiToolingPreview)
+            api(libs.androidx.lifecycle.viewmodelCompose)
+            api(libs.androidx.lifecycle.runtimeCompose)
+            api(libs.navigation.compose)
+            api(libs.kotlinx.serialization.json)
+            api(libs.composeIcons.feather)
+            api(libs.material.adaptive)
+            api(libs.material.navigation.suite)
+            api(libs.material.layout)
+            api(libs.material.navigation)
+            api(libs.ui.backhandler)
+            api(libs.constraintlayout.compose.multiplatform)
+            api(libs.designsystem)
+            api(libs.kotlinx.datetime)
+            api(libs.datatable.material3)
+            api(libs.highlights)
+            api(libs.ktor.client.cio)
+            api(libs.ktor.client.content.negotiation)
+            api(libs.ktor.client.logging)
+            api(libs.ktor.serialization.kotlinx.json)
+            api(libs.ktor.serialization.kotlinx.xml)
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
+            api(libs.koin.compose.viewmodel.navigation)
         }
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            api(libs.kotlin.test)
         }
         jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
+            api(compose.desktop.currentOs)
+            api(libs.kotlinx.coroutinesSwing)
         }
     }
 }
 
-android {
-    namespace = "com.oratakashi.design.docs"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "com.oratakashi.design.docs"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
+//android {
+//    namespace = "com.oratakashi.design.docs"
+//    compileSdk = libs.versions.android.compileSdk.get().toInt()
+//
+//    defaultConfig {
+//        applicationId = "com.oratakashi.design.docs"
+//        minSdk = libs.versions.android.minSdk.get().toInt()
+//        targetSdk = libs.versions.android.targetSdk.get().toInt()
+//        versionCode = 1
+//        versionName = "1.0"
+//    }
+//    packaging {
+//        resources {
+//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//        }
+//    }
+//    buildTypes {
+//        getByName("release") {
+//            isMinifyEnabled = false
+//        }
+//    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
+//}
 
 compose.desktop {
     application {
@@ -119,10 +119,6 @@ compose.desktop {
 
 compose.resources {
     generateResClass = always
-}
-
-dependencies {
-    debugImplementation(compose.uiTooling)
 }
 
 /**
