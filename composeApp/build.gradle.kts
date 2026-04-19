@@ -32,7 +32,7 @@ kotlin {
         androidMain.dependencies {
             api(compose.preview)
             api(libs.androidx.activity.compose)
-            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
             api("io.insert-koin:koin-android")
         }
         commonMain.dependencies {
@@ -62,7 +62,7 @@ kotlin {
             api(libs.ktor.client.logging)
             api(libs.ktor.serialization.kotlinx.json)
             api(libs.ktor.serialization.kotlinx.xml)
-            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
             api(libs.koin.core)
             api(libs.koin.compose)
             api(libs.koin.compose.viewmodel)
