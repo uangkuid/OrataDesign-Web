@@ -32,7 +32,7 @@ material-adaptive-layout = "1.2.0"
 material-adaptive-navigation = "1.2.0"
 material-adaptive-navigation-suite = "1.9.0"
 uiBackhandler = "1.10.2"
-material = "1.10.0"
+material = "1.14.0"
 
 [libraries]
 constraintlayout-compose-multiplatform = { module = "tech.annexflow.compose:constraintlayout-compose-multiplatform", version.ref = "constraintlayoutComposeMultiplatform" }
