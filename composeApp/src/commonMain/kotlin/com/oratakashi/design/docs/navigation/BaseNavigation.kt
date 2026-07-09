@@ -1,6 +1,7 @@
 package com.oratakashi.design.docs.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.SerializationStrategy
 
 /**
@@ -8,7 +9,7 @@ import kotlinx.serialization.SerializationStrategy
  * @author oratakashi
  * @since 16 Nov 2025
  */
-interface BaseNavigation {
+interface BaseNavigation : NavKey {
     /**
      * Provide the serializer for this navigation object.
      * This is used to automatically generate route and title without reflection.

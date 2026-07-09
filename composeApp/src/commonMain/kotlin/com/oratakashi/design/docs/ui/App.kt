@@ -1,62 +1,54 @@
 package com.oratakashi.design.docs.ui
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import com.oratakashi.design.docs.navigation.HomeNavigation
 import com.oratakashi.design.docs.navigation.MainNavigation
+import com.oratakashi.design.docs.navigation.navigationConfig
 import com.oratakashi.design.docs.ui.screen.content.ContentScreen
 import com.oratakashi.design.docs.ui.screen.home.HomeScreen
 import com.oratakashi.design.foundation.OrataAppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun App(
-    hasDeeplink: Boolean = false,
-    onNavHostReady: suspend (NavController, ThreePaneScaffoldNavigator<String?>) -> Unit = { _, _ ->},
+    onBackStackReady: (NavBackStack<NavKey>) -> Unit = {},
+    onDetailBackStackReady: (NavBackStack<NavKey>) -> Unit = {},
 ) {
-    val navController = rememberNavController()
+    val backStack = rememberNavBackStack(navigationConfig, HomeNavigation)
     OrataAppTheme(darkTheme = true) {
-        LaunchedEffect(hasDeeplink) {
-            if (hasDeeplink) {
-                navController.navigate(MainNavigation)
-            }
+        LaunchedEffect(Unit) {
+            onBackStackReady(backStack)
         }
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = HomeNavigation,
-                enterTransition = { fadeIn() },
-                exitTransition = { fadeOut() }
-            ) {
-                composable<HomeNavigation> {
-                    HomeScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        onClicked = { navController.navigate(MainNavigation) }
-                    )
-                }
+            NavDisplay(
+                backStack = backStack,
+                entryProvider = entryProvider {
+                    entry<HomeNavigation> {
+                        HomeScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            onClicked = { backStack.add(MainNavigation) }
+                        )
+                    }
 
-                composable<MainNavigation> {
-                    ContentScreen(
-                        onNavHostReady = onNavHostReady,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    entry<MainNavigation> {
+                        ContentScreen(
+                            onDetailBackStackReady = onDetailBackStackReady,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
-            }
+            )
         }
     }
 }

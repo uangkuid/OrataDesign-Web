@@ -44,7 +44,10 @@ kotlin {
             api(compose.components.uiToolingPreview)
             api(libs.androidx.lifecycle.viewmodelCompose)
             api(libs.androidx.lifecycle.runtimeCompose)
-            api(libs.navigation.compose)
+            api(libs.navigation3.runtime)
+            api(libs.navigation3.ui)
+            api(libs.adaptive.navigation3)
+            api(libs.lifecycle.viewmodel.navigation3)
             api(libs.kotlinx.serialization.json)
             api(libs.composeIcons.feather)
             api(libs.material.adaptive)
@@ -74,6 +77,9 @@ kotlin {
         jvmMain.dependencies {
             api(compose.desktop.currentOs)
             api(libs.kotlinx.coroutinesSwing)
+        }
+        webMain.dependencies {
+            api(libs.navigation3.browser)
         }
     }
 }
