@@ -2,6 +2,33 @@
 
 Living status doc for the Navigation 3 migration described in [`plan.md`](./plan.md). Update this file every time meaningful progress is made or CI fails, so a new session can pick up without re-exploring from scratch.
 
+## Status as of 2026-07-09 (post-migration bug found: mobile-web back navigation → blank screen)
+
+User-reported bug, confirmed via code reading (not yet fixed in code as of this note — see plan below, in progress): after "Get Started" on the landing page, selecting a sidebar menu item and then pressing **back on mobile web** lands on a **blank screen** instead of returning to the sidebar/menu.
+
+**Root cause** — this is exactly the risk flagged (but left unresolved) at assumption #5 below: `ContentScreen.kt` has two separate "where are we" states that only sync one-way.
+1. `detailBackStack` (`NavBackStack<NavKey>`) — real content back stack, bottom entry always `DefaultNavigation` (renders as an empty `Box` placeholder).
+2. `navigator` (`rememberListDetailPaneScaffoldNavigator<String?>()`) — controls which pane `ListDetailPaneScaffold` shows on mobile (list/`Secondary` = Sidebar, detail/`Primary` = content).
+
+`navigator.navigateTo(Primary, ...)` is only ever called from `Sidebar`'s `onSidebarClick` (forward path). Nothing calls `navigateTo(Secondary, ...)` to switch back to the list pane. On web, browser back is handled by `ChronologicalBrowserNavigation` (bound only to `detailBackStack` in `webMain/main.kt`), which mutates that stack directly on `popstate` with **no hook into `navigator`**. So browser back correctly pops `detailBackStack` down to the `DefaultNavigation` placeholder, but `navigator` never gets told to show the list pane again — it stays on the detail pane, now rendering the blank placeholder.
+
+Also corrected during investigation: `BaseNavigation.route` is **non-nullable** (`DefaultNavigation.route` evaluates to its own serial name, never `null`), so the "is anything selected" check must be an identity check against `DefaultNavigation` (or `detailBackStack.size > 1`), not a null-check on `.route`. Also verified against actual `ThreePaneScaffoldNavigator` source: `navigateTo`/`navigateBack` are `suspend`, `canNavigateBack` is not; role mapping for `ListDetailPaneScaffold` is `Primary` = detail pane, `Secondary` = list pane (so today's forward-click code already uses the correct role — only the backward direction was ever missing).
+
+**Fix (see full plan at `/home/tiny/.claude/plans/sekarang-ada-bug-dimana-warm-rivest.md`)**: make `navigator`'s pane-role state a reactive function of `detailBackStack`'s current top entry via a single `LaunchedEffect`, instead of driving it imperatively from scattered call sites. Concretely, in `ContentScreen.kt`:
+- Add `LaunchedEffect(topEntry) { if (topEntry != null && topEntry != DefaultNavigation) navigator.navigateTo(Primary, currentRoute) else navigator.navigateTo(Secondary, null) }`.
+- Remove the fire-and-forget `navigator.navigateBack(...)` from `backAction` (keep only the `detailBackStack` pop).
+- Change `BackHandler`'s `enabled` from `navigator.canNavigateBack(...)` to `detailBackStack.size > 1` (required once `navigateBack` is no longer called from this path — `canNavigateBack` would otherwise latch `true` forever after the first navigation).
+- Remove the imperative `navigator.navigateTo(...)` from `onSidebarClick` (now redundant with the reactive effect; leaving both would double-drive the navigator).
+- Drop now-dead imports: `BackNavigationBehavior`, `rememberCoroutineScope`, `kotlinx.coroutines.launch`.
+
+No changes needed to `webMain/main.kt` or `Sidebar.kt`.
+
+**Flagged, not part of this fix**: unused `adaptive-navigation3:1.3.0-beta02` dependency has a `ListDetailSceneStrategy` that could remove this whole "two sources of truth" class of bug by construction — worth a follow-up, not bundled here (unverified exact KMP package path). Also: possible double-pop on web if Compose's own `BackHandler` also intercepts the browser back button on `wasmJs` in addition to `ChronologicalBrowserNavigation`'s `popstate` listener — flagged for manual verification, pre-existing and orthogonal to this fix.
+
+**Verification**: no local JVM/Gradle in this environment — push and let `build-test.yml` CI build all 3 targets, then manually test on the deployed web build (Get Started → tap sidebar item on mobile viewport → browser back → confirm sidebar shows, not blank → browser forward → confirm detail re-shows; repeat over 2-3 selections; also recheck Android/desktop hardware back doesn't get stuck).
+
+---
+
 ## Status as of 2026-07-09 (2 CI iterations failed on dependency resolution, both fixed, iteration 3 pushed, not yet confirmed green)
 
 **All code changes for the migration are written.** The working environment has no local Kotlin/JVM/Gradle toolchain, so verification is 100% via GitHub Actions CI on the PR the user opened manually (`gh` CLI is unavailable here) — the user pastes job log URLs, which get fetched and read via WebFetch.

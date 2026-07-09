@@ -10,12 +10,10 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
-import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
@@ -47,7 +45,6 @@ import com.oratakashi.design.docs.ui.screen.content.installation.InstallationScr
 import com.oratakashi.design.docs.ui.screen.content.snackbar.SnackbarScreen
 import com.oratakashi.design.docs.ui.screen.content.textfield.TextFieldScreen
 import com.oratakashi.design.docs.ui.screen.content.typography.TypographyScreen
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -56,19 +53,29 @@ fun ContentScreen(
     modifier: Modifier = Modifier
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<String?>()
-    val coroutineScope = rememberCoroutineScope()
     val detailBackStack = rememberNavBackStack(navigationConfig, DefaultNavigation)
-    val currentRoute = (detailBackStack.lastOrNull() as? BaseNavigation)?.route
+    val topEntry = detailBackStack.lastOrNull()
+    val currentRoute = (topEntry as? BaseNavigation)?.route
 
     LaunchedEffect(Unit) {
         onDetailBackStackReady(detailBackStack)
     }
 
+    // Single source of truth for navigator's pane-role state. Runs whenever detailBackStack's
+    // top entry changes for ANY reason: sidebar click (forward), the in-app BackHandler
+    // (backward), or ChronologicalBrowserNavigation mutating detailBackStack directly on browser
+    // back/forward (web only - that library has no callback hook into navigator, it only
+    // mutates the underlying SnapshotStateList).
+    LaunchedEffect(topEntry) {
+        if (topEntry != null && topEntry != DefaultNavigation) {
+            navigator.navigateTo(ThreePaneScaffoldRole.Primary, currentRoute)
+        } else {
+            navigator.navigateTo(ThreePaneScaffoldRole.Secondary, null)
+        }
+    }
+
     val backAction = remember {
         {
-            coroutineScope.launch {
-                navigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
-            }
             if (detailBackStack.size > 1) {
                 detailBackStack.removeAt(detailBackStack.lastIndex)
             }
@@ -77,7 +84,7 @@ fun ContentScreen(
     }
 
     BackHandler(
-        enabled = navigator.canNavigateBack(BackNavigationBehavior.PopUntilContentChange)
+        enabled = detailBackStack.size > 1
     ) {
         backAction()
     }
@@ -108,9 +115,6 @@ fun ContentScreen(
                     onSidebarClick = {
                         // Only navigate if the clicked item is different from current route
                         if (it?.route != currentRoute) {
-                            coroutineScope.launch {
-                                navigator.navigateTo(ThreePaneScaffoldRole.Primary, it?.route)
-                            }
                             detailBackStack.clear()
                             detailBackStack.add(DefaultNavigation)
                             if (it != null) {
