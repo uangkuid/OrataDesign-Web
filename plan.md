@@ -13,6 +13,8 @@ Keputusan yang sudah dikonfirmasi user:
 
 **Status implementasi & progres terkini: lihat [`handoff.md`](./handoff.md).**
 
+> Catatan: beberapa nomor versi di dokumen ini (khususnya `material-adaptive`/`-layout`/`-navigation` dan `androidx-lifecycle`) adalah tebakan awal yang **terbukti salah di CI iterasi pertama** dan sudah direvert ke versi lama yang memang sudah teruji jalan. Versi final yang benar-benar resolve ada di `gradle/libs.versions.toml` itu sendiri dan riwayatnya di `handoff.md`, bukan di sini.
+
 ## Temuan penting soal versi Nav3 (hasil pengecekan repository langsung, bukan asumsi dari dokumentasi)
 
 - Artifact `org.jetbrains.androidx.navigation3:navigation3-ui` dan `org.jetbrains.compose.material3.adaptive:adaptive-navigation3` **tidak ada di Maven Central/Google Maven** — di-host di repository dev JetBrains: `https://packages.jetbrains.team/maven/p/cmp/dev`. Repository ini wajib ditambah ke `settings.gradle.kts`.
