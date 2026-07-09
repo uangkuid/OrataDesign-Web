@@ -65,8 +65,16 @@ These are ranked roughly by how likely they are to be wrong:
 
 ## How to continue from here
 
+Branch `feat/nav3-migration` is already pushed to `origin` as of this session
+(commit `4f38a6a`). The `gh` CLI was **not available** in this session's
+environment, so the PR itself has not been opened yet and `build-test.yml`
+(triggers on `pull_request`, not on plain `push`) has not run.
+
+Open the PR either via the link GitHub prints after the push:
+`https://github.com/uangkuid/OrataDesign-Web/pull/new/feat/nav3-migration`,
+or with `gh` if available in the next session:
+
 ```bash
-git push -u origin feat/nav3-migration
 gh pr create --draft --base main --title "Migrate to Compose Multiplatform Navigation 3" --body "See plan.md and handoff.md"
 gh pr checks --watch
 # on failure:
