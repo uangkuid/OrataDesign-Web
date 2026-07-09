@@ -2,9 +2,23 @@
 
 Living status doc for the Navigation 3 migration described in [`plan.md`](./plan.md). Update this file every time meaningful progress is made or CI fails, so a new session can pick up without re-exploring from scratch.
 
-## Status as of 2026-07-09 (initial implementation pass, not yet CI-verified)
+## Status as of 2026-07-09 (CI iteration 1 failed and fixed, iteration 2 pushed, not yet confirmed green)
 
-**All code changes for the migration are written**, but **nothing has been compiled** — the working environment for this session had no local Kotlin/JVM/Gradle toolchain, so every change below is based on careful reading of docs + verified source of the third-party `navigation3-browser` library, not an actual build. The very next step for whoever picks this up is: **push this branch, open a PR, and read the first CI run's errors.** Expect it to fail at least once; that's normal for this kind of dependency-channel-is-all-prerelease migration.
+**All code changes for the migration are written.** The working environment has no local Kotlin/JVM/Gradle toolchain, so verification is 100% via GitHub Actions CI on the PR the user opened manually (`gh` CLI is unavailable here).
+
+**CI iteration 1 result (commit `4d075ca`): FAILED at dependency resolution**, before any Kotlin compilation happened. Job `build-web` failed at `:kotlinWasmNpmInstall` / `:composeApp:wasmJsNpmAggregated` with "Could not resolve all dependencies." The specific artifacts that could NOT be resolved:
+- `org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0-rc02`
+- `org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.11.0-rc02`
+- `org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0-rc02`
+- `org.jetbrains.compose.material3.adaptive:adaptive:1.3.0-beta03`
+- `org.jetbrains.compose.material3.adaptive:adaptive-layout:1.3.0-beta03`
+- `org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.3.0-beta03`
+
+Notably, **NOT** in the failure list: `navigation3-runtime`, `navigation3-ui`, `adaptive-navigation3`, `navigation3-browser` — those 4 new Nav3 artifacts resolved fine at the versions in `plan.md` (`1.1.1`, `1.1.1`, `1.3.0-beta03`, `1.1.0` respectively). So the earlier assumption that `material-adaptive`/`-layout`/`-navigation` share a release train with `adaptive-navigation3` (and would also have a `1.3.0-beta03`) was **wrong**, and bumping `androidx-lifecycle` to `2.11.0-rc02` to match `lifecycle-viewmodel-navigation3` was also **wrong** — none of those pre-existing artifacts actually publish those versions.
+
+**Fix applied (commit after `4d075ca`)**: reverted `androidx-lifecycle` back to `2.10.0` and `material-adaptive`/`material-adaptive-layout`/`material-adaptive-navigation` back to `1.2.0` (their original, known-working values from before this migration started). Left `adaptive-navigation3`, `navigation3-ui`, `navigation3-runtime`, `navigation3-browser` untouched since those already resolved. `lifecycle-viewmodel-navigation3` still shares `version.ref = "androidx-lifecycle"`, now pointing at `2.10.0` — **not yet confirmed this specific artifact actually publishes a `2.10.0`**, that's the thing to check first in the next CI run if resolution still fails.
+
+**Next step for whoever picks this up: check the next CI run on the PR.** If dependency resolution now succeeds, the next failures (if any) will likely be actual Kotlin compile errors (wrong package names etc., see "Assumptions" below) rather than resolution errors — a different, more informative class of failure to debug.
 
 ### Completed (task list, all marked done in this session)
 1. Gradle repositories + dependencies (`settings.gradle.kts`, `gradle/libs.versions.toml`, `composeApp/build.gradle.kts`)
@@ -41,8 +55,8 @@ These are ranked roughly by how likely they are to be wrong:
 
 1. **Package names for Nav3 APIs** (`androidx.navigation3.runtime.NavKey`, `.entry`, `.entryProvider`, `.rememberNavBackStack`, `.NavBackStack`, `androidx.navigation3.ui.NavDisplay`) — inferred from Android docs (`androidx.navigation3.runtime.*`) plus the pattern this project already follows (JetBrains ports keep the original `androidx.*` package name even though the Maven groupId is `org.jetbrains.androidx.*`). Not verified against the actual `org.jetbrains.androidx.navigation3:navigation3-ui:1.1.1` artifact. If CI says "unresolved reference," this is the first place to look — check the actual class files/sources jar via `./gradlew :composeApp:dependencies` or decompiling the resolved jar.
 2. **`SavedStateConfiguration` import path** (`androidx.savedstate.serialization.SavedStateConfiguration` in `NavigationConfig.kt`) — same caveat, inferred from the terrakok sample app's import list which IS verified (see below), so this one is actually higher-confidence than #1.
-3. **Version compatibility**: `adaptive-navigation3:1.3.0-beta03` bumped alongside `material-adaptive`/`-layout`/`-navigation` to the same `1.3.0-beta03` — assumed these are released in lockstep because they share the Maven group `org.jetbrains.compose.material3.adaptive`, but never confirmed this exact version actually has all three artifacts published (only confirmed `adaptive-navigation3` itself has a `1.3.0-beta03`). If `material-adaptive:1.3.0-beta03` doesn't resolve, try dropping back to `1.2.0` for those three and keep only `adaptive-navigation3` on the beta channel.
-4. **`androidx-lifecycle` bump to `2.11.0-rc02`** — verified this version exists in the JetBrains dev metadata, but did NOT verify `lifecycle-viewmodel-compose`/`lifecycle-runtime-compose` (already in use elsewhere in the app) actually publish a matching `2.11.0-rc02`. If not, may need to split `lifecycle-viewmodel-navigation3` back onto its own separate (possibly older/newer) version ref instead of sharing `androidx-lifecycle`.
+3. ~~**Version compatibility**: `adaptive-navigation3:1.3.0-beta03` bumped alongside `material-adaptive`/`-layout`/`-navigation`~~ **CONFIRMED WRONG by CI iteration 1** — those three do NOT share a release train with `adaptive-navigation3`. Reverted to `1.2.0` (their original value). `adaptive-navigation3` itself stays at `1.3.0-beta03` since that one did resolve.
+4. ~~**`androidx-lifecycle` bump to `2.11.0-rc02`**~~ **CONFIRMED WRONG by CI iteration 1** — `lifecycle-viewmodel-compose`/`lifecycle-runtime-compose` don't publish `2.11.0-rc02`. Reverted `androidx-lifecycle` to `2.10.0`. **Still open**: whether `lifecycle-viewmodel-navigation3` (which shares this version ref) actually publishes a `2.10.0` — wasn't in the iteration-1 failure list at the wrong version, but hasn't been confirmed to resolve at the reverted version either since it's a new artifact this migration introduces. Check this first if the next CI run still fails on it specifically.
 5. **`ContentScreen.kt` pane-role vs content back-stack split** — kept `navigator.navigateTo(ThreePaneScaffoldRole.Primary, it?.route)` unchanged from the old code (same role, same semantics) purely for layout-emphasis switching on narrow screens, while `detailBackStack` now owns content routing. This is a judgment call, not verified against actual runtime behavior — if on narrow/mobile layouts selecting a sidebar item doesn't switch to showing the detail pane, this is the place to check (may need `ThreePaneScaffoldRole.Secondary` instead of `Primary`, or additional handling).
 
 ## Verified with high confidence (fetched actual source, not just docs prose)
@@ -65,19 +79,12 @@ These are ranked roughly by how likely they are to be wrong:
 
 ## How to continue from here
 
-Branch `feat/nav3-migration` is already pushed to `origin` as of this session
-(commit `4f38a6a`). The `gh` CLI was **not available** in this session's
-environment, so the PR itself has not been opened yet and `build-test.yml`
-(triggers on `pull_request`, not on plain `push`) has not run.
-
-Open the PR either via the link GitHub prints after the push:
-`https://github.com/uangkuid/OrataDesign-Web/pull/new/feat/nav3-migration`,
-or with `gh` if available in the next session:
+Branch `feat/nav3-migration` is pushed and a PR is open (user opened it manually since `gh` CLI is unavailable in this session's environment). CI iteration 1 failed at dependency resolution (see Status above); the fix for that has been committed and pushed. Watch the next CI run on the PR:
 
 ```bash
-gh pr create --draft --base main --title "Migrate to Compose Multiplatform Navigation 3" --body "See plan.md and handoff.md"
-gh pr checks --watch
-# on failure:
+gh pr checks --watch          # if gh becomes available
 gh run view <run-id> --log-failed
 # fix, commit, push, repeat. Update this file's "Status" section after each iteration.
 ```
+
+If `gh` stays unavailable, the user needs to paste the next failing job's log (or its download URL, like they did for iteration 1) for the next session/turn to read via WebFetch.
