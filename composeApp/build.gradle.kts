@@ -32,7 +32,7 @@ kotlin {
         androidMain.dependencies {
             api(compose.preview)
             api(libs.androidx.activity.compose)
-            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
             api("io.insert-koin:koin-android")
         }
         commonMain.dependencies {
@@ -44,7 +44,10 @@ kotlin {
             api(compose.components.uiToolingPreview)
             api(libs.androidx.lifecycle.viewmodelCompose)
             api(libs.androidx.lifecycle.runtimeCompose)
-            api(libs.navigation.compose)
+            api(libs.navigation3.runtime)
+            api(libs.navigation3.ui)
+            api(libs.adaptive.navigation3)
+            api(libs.lifecycle.viewmodel.navigation3)
             api(libs.kotlinx.serialization.json)
             api(libs.composeIcons.feather)
             api(libs.material.adaptive)
@@ -62,7 +65,7 @@ kotlin {
             api(libs.ktor.client.logging)
             api(libs.ktor.serialization.kotlinx.json)
             api(libs.ktor.serialization.kotlinx.xml)
-            api(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+            api(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
             api(libs.koin.core)
             api(libs.koin.compose)
             api(libs.koin.compose.viewmodel)
@@ -74,6 +77,9 @@ kotlin {
         jvmMain.dependencies {
             api(compose.desktop.currentOs)
             api(libs.kotlinx.coroutinesSwing)
+        }
+        webMain.dependencies {
+            api(libs.navigation3.browser)
         }
     }
 }
