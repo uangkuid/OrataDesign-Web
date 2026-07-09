@@ -2,23 +2,19 @@
 
 Living status doc for the Navigation 3 migration described in [`plan.md`](./plan.md). Update this file every time meaningful progress is made or CI fails, so a new session can pick up without re-exploring from scratch.
 
-## Status as of 2026-07-09 (CI iteration 1 failed and fixed, iteration 2 pushed, not yet confirmed green)
+## Status as of 2026-07-09 (2 CI iterations failed on dependency resolution, both fixed, iteration 3 pushed, not yet confirmed green)
 
-**All code changes for the migration are written.** The working environment has no local Kotlin/JVM/Gradle toolchain, so verification is 100% via GitHub Actions CI on the PR the user opened manually (`gh` CLI is unavailable here).
+**All code changes for the migration are written.** The working environment has no local Kotlin/JVM/Gradle toolchain, so verification is 100% via GitHub Actions CI on the PR the user opened manually (`gh` CLI is unavailable here) — the user pastes job log URLs, which get fetched and read via WebFetch.
 
-**CI iteration 1 result (commit `4d075ca`): FAILED at dependency resolution**, before any Kotlin compilation happened. Job `build-web` failed at `:kotlinWasmNpmInstall` / `:composeApp:wasmJsNpmAggregated` with "Could not resolve all dependencies." The specific artifacts that could NOT be resolved:
-- `org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0-rc02`
-- `org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.11.0-rc02`
-- `org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0-rc02`
-- `org.jetbrains.compose.material3.adaptive:adaptive:1.3.0-beta03`
-- `org.jetbrains.compose.material3.adaptive:adaptive-layout:1.3.0-beta03`
-- `org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.3.0-beta03`
+**CI iteration 1 (commit `4d075ca`): FAILED at dependency resolution**, `build-web` job, task `:kotlinWasmNpmInstall`. Six artifacts unresolvable: `lifecycle-viewmodel-compose`/`lifecycle-runtime-compose`/`lifecycle-viewmodel-navigation3` @ `2.11.0-rc02`, and `material-adaptive`/`-layout`/`-navigation` @ `1.3.0-beta03`. Fixed by reverting `androidx-lifecycle` → `2.10.0` and the `material-adaptive` trio → `1.2.0` (commit `cce35dd`).
 
-Notably, **NOT** in the failure list: `navigation3-runtime`, `navigation3-ui`, `adaptive-navigation3`, `navigation3-browser` — those 4 new Nav3 artifacts resolved fine at the versions in `plan.md` (`1.1.1`, `1.1.1`, `1.3.0-beta03`, `1.1.0` respectively). So the earlier assumption that `material-adaptive`/`-layout`/`-navigation` share a release train with `adaptive-navigation3` (and would also have a `1.3.0-beta03`) was **wrong**, and bumping `androidx-lifecycle` to `2.11.0-rc02` to match `lifecycle-viewmodel-navigation3` was also **wrong** — none of those pre-existing artifacts actually publish those versions.
+**CI iteration 2 (commit `cce35dd`): FAILED at dependency resolution again**, same job/task, this time on `org.jetbrains.compose.material3.adaptive:adaptive-navigation3:1.3.0-beta03` specifically — Gradle's error explicitly listed all 3 searched repos (google, mavenCentral, the JetBrains dev repo) and found nothing. **Root cause**: `1.3.0-beta03` for `adaptive-navigation3` only exists as `+dev1234`/`+snapshot.xxx` suffixed CI builds, never as a plain resolvable release — confirmed by asking WebFetch to reproduce the *raw, unsummarized* `<version>` entries from `maven-metadata.xml` instead of asking it to summarize (a "summarize this" prompt against that file earlier in this session had incorrectly reported `1.3.0-beta03` as the clean latest release — it wasn't). The actual latest clean release is `1.3.0-beta02`. Fixed by reverting `adaptiveNavigation3` → `1.3.0-beta02` (commit after `cce35dd`) — which, notably, was the version originally cited by the JetBrains docs page this whole migration is based on; the earlier "upgrade" to `beta03` was an unforced, unverified error.
 
-**Fix applied (commit after `4d075ca`)**: reverted `androidx-lifecycle` back to `2.10.0` and `material-adaptive`/`material-adaptive-layout`/`material-adaptive-navigation` back to `1.2.0` (their original, known-working values from before this migration started). Left `adaptive-navigation3`, `navigation3-ui`, `navigation3-runtime`, `navigation3-browser` untouched since those already resolved. `lifecycle-viewmodel-navigation3` still shares `version.ref = "androidx-lifecycle"`, now pointing at `2.10.0` — **not yet confirmed this specific artifact actually publishes a `2.10.0`**, that's the thing to check first in the next CI run if resolution still fails.
+**Lesson for future iterations**: when checking whether a specific Maven Central / JetBrains-dev-repo version string is real, don't ask WebFetch to "summarize" or "list versions" from a `maven-metadata.xml` — ask it to reproduce the raw `<version>` lines verbatim, character for character, and check the exact string yourself. Summarization prompts against that file have been wrong twice in this session.
 
-**Next step for whoever picks this up: check the next CI run on the PR.** If dependency resolution now succeeds, the next failures (if any) will likely be actual Kotlin compile errors (wrong package names etc., see "Assumptions" below) rather than resolution errors — a different, more informative class of failure to debug.
+**Fix applied, pushed, not yet confirmed**: `adaptiveNavigation3` version is now `1.3.0-beta02`. All other Nav3-specific artifacts (`navigation3-runtime`/`navigation3-ui` @ `1.1.1`, `navigation3-browser` @ `1.1.0`) have never appeared in any failure list across both iterations, so those are trustworthy as-is. `androidx-lifecycle` @ `2.10.0` and `material-adaptive` trio @ `1.2.0` are the original pre-migration values, also trustworthy.
+
+**Next step for whoever picks this up: check the next CI run on the PR.** If dependency resolution finally succeeds, the next failures (if any) will likely be actual Kotlin compile errors (wrong package names etc., see "Assumptions" below) — a different, more informative class of failure to debug, and the point where this migration starts getting genuinely interesting rather than just chasing version strings.
 
 ### Completed (task list, all marked done in this session)
 1. Gradle repositories + dependencies (`settings.gradle.kts`, `gradle/libs.versions.toml`, `composeApp/build.gradle.kts`)
